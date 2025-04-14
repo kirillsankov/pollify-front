@@ -1,14 +1,20 @@
-// import './App.css';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import stype from './global.module.scss';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </Router>
+    <>
+      <Header/>
+          <main className={stype.main}>
+            <Routes>
+              <Route path={"/login"} element={<LoginPage />} />
+            </Routes>
+          </main>
+      <Footer/>
+    </>
   );
 }
 

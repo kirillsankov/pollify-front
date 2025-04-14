@@ -1,0 +1,23 @@
+@import '../../global.module.scss';
+
+.footer {
+    border-radius: 64px 64px 0 0;
+    background-color: $second-color;
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 16px;
+    height: 100px;
+    padding: 80px 15px 42px;
+
+    &__container {
+        width: 100%;
+        margin-top: auto;
+    }
+
+    &__textContainer {
+        display: flex;
+        justify-content: flex-end;
+        column-gap: 8px;
+        align-items: flex-end;
+    }
+}

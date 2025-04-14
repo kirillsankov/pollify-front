@@ -1,0 +1,12 @@
+@import '../../global.module.scss';
+
+.button {
+    border-radius: 16px;
+    padding: 16px 32px;
+    background-color: $main-color;
+    color: $white;
+    text-decoration: none;
+    font-weight: $font-weight-bold;
+    transition: background-color 0.3s ease-in-out;
+    // border: 1px solid $custom-black;
+}
