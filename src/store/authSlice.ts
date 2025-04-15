@@ -18,8 +18,8 @@ interface AuthState {
   error: string | null;
 }
 
-export const login = createAsyncThunk('auth/login', async (credentials: LoginCredentials) => {
-  const response = await axios.post('/auth/login', credentials);
+export const login = createAsyncThunk(`${process.env.REACT_APP_BACK_LINK}/auth/login`, async (credentials: LoginCredentials) => {
+  const response = await axios.post(`${process.env.REACT_APP_BACK_LINK}/auth/login`, credentials);
   return response.data;
 });
 
@@ -37,6 +37,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.token = null;
       state.user = null;
+      localStorage.removeItem('token');
     },
   },
   extraReducers: (builder) => {
@@ -47,6 +48,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.token = action.payload.access_token;
+        localStorage.setItem('token', action.payload.access_token);
       })
       .addCase(login.rejected, (state, action) => {
         state.status = 'failed';
