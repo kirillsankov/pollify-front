@@ -59,6 +59,14 @@
             padding: 5px;
             background-color: $second-color;
         }
+        &:focus {
+            outline: none;
+            border: 1px solid $main-color;
+        }
+    }
+
+    &__inputError {
+        border: 1px solid red;
     }
 
     &__sumbit {
@@ -73,5 +81,21 @@
         border: none;
         cursor: pointer;
         width: 100%;
+
+        &:disabled {
+            opacity: 0.5;
+        }
+    }
+
+    &__text {
+        margin-top: 16px;
+        text-align: center;
+    }
+
+    &__error {
+        color: red;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-left: 8px;
     }
 }
