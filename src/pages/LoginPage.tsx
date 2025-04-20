@@ -5,52 +5,43 @@ import { login } from '../store/authSlice';
 import { AppDispatch } from '../store/store';
 import style from '../assets/styles/Form.module.scss'
 import { useForm } from '@tanstack/react-form'
-import type { AnyFieldApi } from '@tanstack/react-form'
-import { AxiosError } from 'axios';
+import { FieldInfo } from '../components/UI/FieldInfo';
 
 const LoginPage: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
+
     const formTan = useForm({
       defaultValues: {
         username: '',
         password: '',
       },
       validators: {
-      onSubmitAsync: async ({ value }) => {
-        const { username, password } = value;
-        try {
-          await dispatch(login({ username, password })).unwrap();
-          navigate('/app');
-          console.log('test');
-          return null
-
-        } catch (error: AxiosError | unknown) {
-          console.log(error);
-          if(error instanceof AxiosError) {
-            if(error.status === 401 && error.message === 'Invalid credentials') {
-              return 'Password or username is incorrect'
+        onSubmitAsync: async ({ value }) => {
+          const { username, password } = value;
+          try {
+            const result = await dispatch(login({ username, password }));
+            
+            if (result && result.meta.requestStatus === 'rejected') {
+              const rejectedResult = result as { error: { message?: string } };
+              console.log('Login error:', rejectedResult.error);
+              
+              if (rejectedResult.error?.message?.includes('401')) {
+                return 'Password or username is incorrect';
+              }
+              return rejectedResult.error?.message || 'Server error';
             }
+            
+            navigate('/app');
+            return null;
+          } catch (error) {
+            console.log('Unexpected error:', error);
+            return 'An unexpected error occurred';
           }
-          return 'Server error'
-        }
+        },
       },
-    },
-    onSubmit: async ({ value }) => {
-      const { username, password } = value;
-      dispatch(login({ username, password })).then(() => {
-        navigate('/app');
-      });
-    },
   })
 
-    function FieldInfo({ field }: { field: AnyFieldApi }) {
-      return (
-        <span className={style.form__error}>
-          <em>{field.state.meta.errors.join(',')}</em>
-        </span>
-      )
-    }
 
     const onEventsValidate = ({ value }: { value: string }) => {
       return !value ? 'A username name is required' : value.length < 3 ? 'Username must be at least 3 characters' : undefined;
@@ -63,19 +54,6 @@ const LoginPage: React.FC = () => {
         if (!value) {
           return 'Password is required';
         }
-        // if (value.length < 6) {
-        //   return 'Password must be at least 6 characters';
-        // }
-        // if (!/[A-Z]/.test(value)) {
-        //   return 'Password must contain at least one uppercase letter';
-        // }
-        // if (!/[0-9]/.test(value)) {
-        //   return 'Password must contain at least one number';
-        // }
-        // if (!/[a-z]/.test(value)) {
-        //   return 'Password must contain at least one lowercase letter';
-        // }
-        // return undefined;
       },
     }
 
@@ -144,7 +122,7 @@ const LoginPage: React.FC = () => {
                   <button className={style.form__sumbit} type="submit" disabled={!canSubmit}>
                     {isSubmitting ? 'Loading...' : 'Submit'}
                   </button>
-                  <span>{typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}</span>
+                  <span className={style.form__mainError}>{typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}</span>
 
                   <p className={style.form__text}>No account? <Link className={style.link} to="/register">To create...</Link></p>
                 </>
