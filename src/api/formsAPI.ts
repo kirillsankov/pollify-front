@@ -10,6 +10,15 @@ export const getForms = async (): Promise<Poll[]> => {
   return response.data;
 };
 
+export const getForm = async (id: string): Promise<Poll> => {
+  const response = await axios.get(`${process.env.REACT_APP_BACK_LINK}/polls/${id}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
+  });
+  return response.data;
+};
+
 interface CreatePollData {
   title: string;
   questions: {

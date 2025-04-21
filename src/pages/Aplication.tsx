@@ -3,6 +3,7 @@ import CreateForm from "../components/CreateForm";
 import Stats from "../components/Stats";
 import style from '../assets/styles/Application.module.scss'
 import Aside from "../components/UI/Aside";
+import FormInner from '../components/FormInner';
 
 const Application = () => {
     return (
@@ -12,6 +13,7 @@ const Application = () => {
                 <Routes> 
                     <Route path="create" element={<CreateForm/>}/>
                     <Route path="stats" element={<Stats/>}/>
+                    <Route path="stats/:id" element={<FormInner/>}/>
                 </Routes>
             </>
         </div>
