@@ -8,12 +8,12 @@ const Application = () => {
     return (
         <div className={`${style.container} ${style.aside__container}`}>
             <Aside/>
-            <div>
+            <>
                 <Routes> 
                     <Route path="create" element={<CreateForm/>}/>
                     <Route path="stats" element={<Stats/>}/>
                 </Routes>
-            </div>
+            </>
         </div>
     )
 }

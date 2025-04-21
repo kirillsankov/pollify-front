@@ -4,8 +4,10 @@ export interface Poll {
     _id: string;
     title: string;
     authorId: string;
+    authorName: string;
     questions: Question[];
-    expiresAt: string;
+    createAt: string;
+    votedUsers: string;
   }
   
   export interface Question {
