@@ -1,6 +1,7 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Question } from '../../types/inerfaces';
 import { useEffect, useState } from 'react';
+import style from '../../assets/styles/FormInner.module.scss';
 
 interface Props {
     questions: Question[];
@@ -43,15 +44,13 @@ export default function StackedBarChart({ questions } :Props)  {
         <>
             {
                 pollData.map((question: IData[], index: number) => (
-                    <> 
-                        <h2>{questions[index].text}</h2>
+                    <div className={style.formInner__item}> 
+                        <h2 className={style.formInner__subtitle}>{questions[index].text}</h2>
                         <ResponsiveContainer minWidth="100%" minHeight="600px" key={index}>
                             <BarChart
                             data={question}
                             margin={{
                                 top: 20,
-                                right: 30,
-                                left: 20,
                                 bottom: 5,
                             }}
                             >
@@ -63,7 +62,7 @@ export default function StackedBarChart({ questions } :Props)  {
                             <Bar dataKey="votes" stackId="a" fill="#7334E6" />
                             </BarChart>
                         </ResponsiveContainer> 
-                    </>
+                    </div>
                 ))
             }
         </>

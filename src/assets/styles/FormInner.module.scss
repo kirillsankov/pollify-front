@@ -1,0 +1,65 @@
+@import "../../global.module.scss";
+
+.formInner {
+    width: 100%;
+    &__topBlock {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    &__linkContainer {
+        padding: 8px;
+        border-radius: 16px;
+        background-color: $main-color;
+        transition: all .3s ease-in-out;
+        cursor: pointer;
+        display: flex;
+        align-items: center;;
+        column-gap: 4px;
+        text-decoration: none;
+        color: $white;
+    }
+    &__topIcon {
+
+        &__revert {
+            // transform: rotate(-90deg);
+        }
+    }
+
+    &__icon {
+        fill: $white;
+    }
+
+    &__iconText {
+
+    }
+
+    &__edit {
+
+    }
+
+    &__pollStat {
+
+    }
+
+    &__title {
+        font-size: $font-size-h1;
+        margin-bottom: 8px;
+    }
+
+    &__subtitle {
+        font-size: $font-size-h2;
+        margin-bottom: 8px;
+    }
+
+    &__item {
+        margin-bottom: 16px;
+    }
+
+    &__voted {
+        display: block;
+        margin-bottom: 32px;
+    }
+}
