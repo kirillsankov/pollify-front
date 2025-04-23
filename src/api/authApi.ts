@@ -6,8 +6,11 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-export const validateToken= async (token: string): Promise<boolean>  => {
+export const validateToken= async (token: string | null = null): Promise<boolean>  => {
   try {
+    if(!token) {
+      return false;
+    }
     const response = await apiClient.get('/auth/validate', {
       headers: {
         Authorization: `Bearer ${token}`,

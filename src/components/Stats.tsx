@@ -3,15 +3,20 @@ import { getForms } from "../api/formsAPI";
 import { Poll } from "../types/inerfaces";
 import style from "../assets/styles/Stats.module.scss";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const Stats = () => {
     const [form, setForm] = useState<Poll[]>([]);
+    const { token } = useAuth();
 
     useEffect(() => {
-        getForms().then((res) => {
+        if (!token) {
+            return;
+        }
+        getForms(token).then((res) => {
             setForm(res);
         });
-    }, [])
+    }, [token])
 
 
     return (

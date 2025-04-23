@@ -32,18 +32,6 @@
         fill: $white;
     }
 
-    &__iconText {
-
-    }
-
-    &__edit {
-
-    }
-
-    &__pollStat {
-
-    }
-
     &__title {
         font-size: $font-size-h1;
         margin-bottom: 8px;
@@ -61,5 +49,11 @@
     &__voted {
         display: block;
         margin-bottom: 32px;
+    }
+
+    &__error {
+        color: $red;
+        width: 100%;
+        font-weight: $font-weight-bold;
     }
 }

@@ -1,19 +1,19 @@
 import axios from 'axios';
 import { Poll } from '../types/inerfaces';
 
-export const getForms = async (): Promise<Poll[]> => {
+export const getForms = async (token: string): Promise<Poll[]> => {
   const response = await axios.get(`${process.env.REACT_APP_BACK_LINK}/polls`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
 };
 
-export const getForm = async (id: string): Promise<Poll> => {
+export const getForm = async (id: string, token: string): Promise<Poll> => {
   const response = await axios.get(`${process.env.REACT_APP_BACK_LINK}/polls/${id}`, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('token')}`,
+      Authorization: `Bearer ${token}`,
     },
   });
   return response.data;
@@ -27,13 +27,27 @@ interface CreatePollData {
   }[];
 }
 
-export const createPoll = async (pollData: CreatePollData): Promise<Poll> => {
+export const createPoll = async (pollData: CreatePollData, token: string): Promise<Poll> => {
   const response = await axios.post(
     `${process.env.REACT_APP_BACK_LINK}/polls`, 
     pollData,
     {
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};
+
+export const updatePoll = async (id: string, pollData: CreatePollData, token: string): Promise<Poll> => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BACK_LINK}/polls/${id}/update`, 
+    pollData,
+    {
+      headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     }

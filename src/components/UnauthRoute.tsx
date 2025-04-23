@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
 import { validateToken } from '../api/authApi';
+import { useAuth } from '../hooks/useAuth';
 
 function UnauthRoute() {
-  const token = useSelector((state: RootState) => state.auth.token) || localStorage.getItem('token');
+  const { token } = useAuth();
   const [isValid, setIsValid] = useState<boolean | null>(null);
 
   useEffect(() => {

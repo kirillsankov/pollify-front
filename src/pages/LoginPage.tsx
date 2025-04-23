@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
               return rejectedResult.error?.message || 'Server error';
             }
             
-            navigate('/app');
+            navigate('/app/stats');
             return null;
           } catch (error) {
             console.log('Unexpected error:', error);

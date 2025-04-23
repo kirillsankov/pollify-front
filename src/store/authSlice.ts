@@ -23,8 +23,10 @@ export const login = createAsyncThunk(`${process.env.REACT_APP_BACK_LINK}/auth/l
   return response.data;
 });
 
+const storedToken = localStorage.getItem('token');
+
 const initialState: AuthState = {
-  token: null,
+  token: storedToken,
   user: null,
   status: 'idle',
   error: null,
@@ -39,6 +41,9 @@ const authSlice = createSlice({
       state.user = null;
       localStorage.removeItem('token');
     },
+    setToken: (state, action) => {
+      state.token = action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -57,6 +62,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, setToken } = authSlice.actions;
 
 export default authSlice.reducer;

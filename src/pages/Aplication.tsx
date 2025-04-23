@@ -14,6 +14,7 @@ const Application = () => {
                     <Route path="create" element={<CreateForm/>}/>
                     <Route path="stats" element={<Stats/>}/>
                     <Route path="stats/:id" element={<FormInner/>}/>
+                    <Route path="edit/:id" element={<CreateForm/>}/>
                 </Routes>
             </>
         </div>

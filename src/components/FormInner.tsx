@@ -4,30 +4,44 @@ import StackedBarChart from "./charts/StackedBarChart";
 import { getForm } from "../api/formsAPI";
 import { Poll, Question } from "../types/inerfaces";
 import style from '../assets/styles/FormInner.module.scss';
+import { AxiosError } from "axios";
+import Loader from "./UI/Loader";
+import { useAuth } from "../hooks/useAuth";
 
 
 const FormInner = () => {
     const { id } = useParams();
+    const { token } = useAuth();
     const [questions, setQuestions] = useState<Question[]>([]);
     const [poll, setPoll] = useState<Poll | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchPoll = async () => {
-            if (id) {
-                const poll = await getForm(id);
-                setPoll(poll);
-                setQuestions(poll.questions);
+            if (id && token) {
+                try {
+                    const poll = await getForm(id, token);
+                    setPoll(poll);
+                    setQuestions(poll.questions);
+                } catch (error) {
+                    setError(error instanceof AxiosError && error.response ? error.response.data.message : 'An unknown error occurred');
+                }
             }
         };
         
         fetchPoll();
-    }, [id]);
+    }, [id, token]);
+
+    if (error) {
+        return <div className={style.formInner__error}>Error: {error}</div>;
+    }
 
     if(!poll) {
         return (
-            <div>Load...</div> 
+            <Loader/>
          )
     }
+
 
     return (
         <div className={style.formInner}>
@@ -40,7 +54,7 @@ const FormInner = () => {
                     </div>
                     <span className={style.formInner__iconText}>Back</span> 
                 </Link>
-                <Link className={style.formInner__linkContainer} to={'/'}>
+                <Link className={style.formInner__linkContainer} to={`/app/edit/${id}`}>
                     <div className={`${style.formInner__topIcon} ${style.formInner__topIcon__revert}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                             <path className={style.formInner__icon} d="M16 2.012l3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287l-3-3zm0 6h16v2H4z"></path>

@@ -1,16 +1,39 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import style from '../assets/styles/Form.module.scss';
 import { useForm } from '@tanstack/react-form';
 import { FieldInfo } from './UI/FieldInfo';
 import React, { useState, useEffect } from 'react';
-import { createPoll } from '../api/formsAPI';
+import { createPoll, getForm, updatePoll } from '../api/formsAPI';
+import { Poll } from '../types/inerfaces';
+import { useAuth } from '../hooks/useAuth';
 
 const CreateForm: React.FC = () => {
     const navigate = useNavigate();
+    const {id} = useParams();
+    const { token } = useAuth();
     const [questions, setQuestions] = useState([
         { text: '', options: [''], errors: { text: '', options: [''] } }
     ]);
+    const [poll, setPoll] = useState<Poll | null>(null);
     const [formValid, setFormValid] = useState(false);
+
+
+    useEffect(() => {
+        const fetchPoll = async () => {
+            if (id && token) {
+                const poll = await getForm(id, token);
+                const questions = poll.questions.map(q => ({
+                    text: q.text,
+                    options: q.options,
+                    errors: { text: '', options: q.options.map(() => '') }
+                }));
+                setPoll(poll);
+                setQuestions(questions);
+            }
+        };
+        
+        fetchPoll();
+    }, [id, token]);
 
     useEffect(() => {
         const isValid = questions.every(q => 
@@ -22,11 +45,14 @@ const CreateForm: React.FC = () => {
 
     const form = useForm({
         defaultValues: {
-            title: '',
+            title: poll?.title || '',
         },
         validators: {
             onSubmitAsync: async ({ value }) => {
                 try {
+                    if (!token) {
+                        return;
+                    }
                     const { title } = value;
                     const filteredQuestions = questions
                         .filter(q => q.text.trim() !== '')
@@ -39,11 +65,18 @@ const CreateForm: React.FC = () => {
                     if (filteredQuestions.length === 0) {
                         return 'At least one question with one option is required';
                     }
-    
-                    const poll = await createPoll({
-                        title,
-                        questions: filteredQuestions,
-                    });
+                    let poll = null
+                    if(id) {
+                        poll = await updatePoll(id, {
+                            title,
+                            questions: filteredQuestions,
+                        }, token);
+                    } else {
+                        poll = await createPoll({
+                            title,
+                            questions: filteredQuestions,
+                        }, token);
+                    }
                     
                     navigate(`/app/stats/${poll._id}`);
                     return null;
@@ -166,7 +199,7 @@ const CreateForm: React.FC = () => {
 
     return (
         <div className={style.formCreate__block}>
-        <h1 className={style.formCreate__title}>Create New Poll</h1>
+        <h1 className={style.formCreate__title}>{`${id ? 'Update' : 'Create New'} Poll`}</h1>
         <form 
             className={style.formCreate__form}
             onSubmit={handleSubmit}
@@ -286,7 +319,10 @@ const CreateForm: React.FC = () => {
                             type="submit" 
                             disabled={!canSubmit || !formValid}
                         >
-                            {isSubmitting ? 'Creating...' : 'Create Poll'}
+                            {isSubmitting ? 
+                                id ? 'Updating...' :'Creating...' 
+                            : 
+                                id ? 'Update Poll' : 'Create Poll'}
                         </button>
                         <span className={style.form__mainError}>
                             {typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}
