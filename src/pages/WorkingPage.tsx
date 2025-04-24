@@ -42,10 +42,8 @@ const WorkingPage = () => {
         },
         onSubmit: async ({ value }) => {
             try {
-                // Преобразуем объект ответов в массив для API
                 const answersArray = Object.values(value.answers);
                 
-                // Проверяем, что на все вопросы даны ответы
                 if (poll && answersArray.length !== poll.questions.length) {
                     return { error: "Please answer all questions" };
                 }
@@ -61,7 +59,6 @@ const WorkingPage = () => {
                     }
                 );
                 
-                // После успешного голосования перенаправляем на страницу статистики
                 navigate(`/app/stats/${id}`);
                 return { status: "success" };
             } catch (error) {
