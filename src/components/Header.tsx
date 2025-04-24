@@ -18,11 +18,11 @@ export function Header() {
                 </Link>
                 {
                     !isAuthenticated ?
-                    <Button href='/login' text='Sign In'></Button> :
-                    <button onClick={() => {
+                    <Button href='/login'>Sign In</Button> :
+                    <Button onClick={() => {
                         dispatch(logout());
                         navigate('/login');
-                    }}>Exit</button>
+                    }}>Exit</Button>
                 }
             </div>
         </header>

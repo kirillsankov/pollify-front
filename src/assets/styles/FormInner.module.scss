@@ -9,6 +9,11 @@
         margin-bottom: 32px;
     }
 
+    &__topBlockLeft {
+        display: flex;
+        column-gap: 8px;
+    }
+
     &__linkContainer {
         padding: 8px;
         border-radius: 16px;

@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 import RegisterPage from './pages/RegisterPage';
 import UnauthRoute from './components/UnauthRoute';
 import Application from './pages/Aplication';
+import WorkingPage from './pages/WorkingPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <main className={stype.main}>
             <Routes>
               <Route element={<PrivateRoute/>}>
+                <Route path="/form/:id" element={<WorkingPage />} /> 
                 <Route path="/app/*" element={<Application />} />
               </Route>
               <Route element={<UnauthRoute/>}>

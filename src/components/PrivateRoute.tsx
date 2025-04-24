@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { validateToken } from '../api/authApi';
 import Loader from './UI/Loader';
 import { useAuth } from '../hooks/useAuth';
+import LoginPage from '../pages/LoginPage';
 
 function PrivateRoute() {
   const { token } = useAuth();
@@ -31,7 +32,11 @@ function PrivateRoute() {
   }
 
   if (!isValid) {
-    return <Navigate to="/login" replace />;
+    return <LoginPage callBackSuccess={
+      () => {
+        setIsValid(true);
+      }
+    }/>;
   }
 
   return <Outlet />;

@@ -4,12 +4,16 @@ import { Link } from 'react-router-dom';
 
 interface ButtonProps {
   href?: string;
-  text?: string;
+  onClick?: () => void | undefined;
+  children: React.ReactNode;
 }
 
-export function Button({href = '#', text = "button"}: ButtonProps): JSX.Element {
+export function Button({href = '#', onClick, children}: ButtonProps): JSX.Element {
     console.log(styleButton);
     return (
-        <Link className={styleButton.button} to={href}>{text}</Link>
+      onClick ? 
+      <button className={styleButton.button} onClick={onClick}>{children}</button> 
+      :
+      <Link className={styleButton.button} to={href}>{children}</Link>
     )
 }

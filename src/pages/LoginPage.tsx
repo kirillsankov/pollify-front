@@ -7,7 +7,11 @@ import style from '../assets/styles/Form.module.scss'
 import { useForm } from '@tanstack/react-form'
 import { FieldInfo } from '../components/UI/FieldInfo';
 
-const LoginPage: React.FC = () => {
+interface Props {
+  callBackSuccess?: () => void | undefined;
+}
+
+const LoginPage = ({ callBackSuccess }: Props) => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
@@ -31,8 +35,11 @@ const LoginPage: React.FC = () => {
               }
               return rejectedResult.error?.message || 'Server error';
             }
-            
-            navigate('/app/stats');
+            if (callBackSuccess) {
+              callBackSuccess();
+            } else {
+              navigate('/app/stats');
+            }
             return null;
           } catch (error) {
             console.log('Unexpected error:', error);
