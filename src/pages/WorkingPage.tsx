@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import { getForm } from "../api/formsAPI";
-import { Poll, Question } from "../types/inerfaces";
-import style from '../assets/styles/FormInner.module.scss';
-import formStyle from '../assets/styles/Form.module.scss';
+import { useNavigate, useParams } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import { getForm, voteForm } from "../api/formsAPI";
+import { Poll } from "../types/inerfaces";
+import style from '../assets/styles/WorkingPage.module.scss';
 import Loader from "../components/UI/Loader";
 import { useAuth } from "../hooks/useAuth";
 import { useForm } from "@tanstack/react-form";
@@ -40,39 +39,40 @@ const WorkingPage = () => {
         defaultValues: {
             answers: {} as Record<number, string>,
         },
-        onSubmit: async ({ value }) => {
-            try {
-                const answersArray = Object.values(value.answers);
-                
-                if (poll && answersArray.length !== poll.questions.length) {
-                    return { error: "Please answer all questions" };
-                }
-                
-                await axios.post(
-                    `${process.env.REACT_APP_BACK_LINK}/polls/${id}/vote`,
-                    { questions: answersArray },
-                    {
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    }
-                );
-                
-                navigate(`/app/stats/${id}`);
-                return { status: "success" };
-            } catch (error) {
-                console.error("Error submitting vote:", error);
-                return { error: "Failed to submit your vote. Please try again." };
-            }
-        },
         validators: {
-            onSubmit: ({ value }) => {
-                if (poll && Object.keys(value.answers).length !== poll.questions.length) {
-                    return "Please answer all questions";
+            onSubmit: async ({ value }) => {
+                try {
+                    const answersArray = Object.values(value.answers);
+                    
+                    if (poll && answersArray.length !== poll.questions.length) {
+                        return "Please answer all questions";
+                    }
+                    if(!id || !token) {
+                        return "Error";
+                    }
+                    await voteForm(id, answersArray, token);
+                    await axios.post(
+                        `${process.env.REACT_APP_BACK_LINK}/polls/${id}/vote`,
+                        { questions: answersArray },
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                        }
+                    );
+                    
+                    navigate(`/app/stats/${id}`);
+                    // return { status: "success" };
+                } catch (error) {
+                    console.log(error);
+                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
+                        return error.response.data.message;
+                    }
+                    console.error("Error submitting vote:", error);
+                    return "Failed to submit your vote. Please try again.";
                 }
-                return "";
-            }
+            },
         }
     });
 
@@ -81,24 +81,17 @@ const WorkingPage = () => {
     }
 
     if (error || !poll) {
-        return <div className={style.formInner__error}>Error: {error || "Poll not found"}</div>;
+        return (
+            <div className={`${style.container}  ${style.formShown}`}>
+                <div className={style.formInner__error}>Error: {error || "Poll not found"}</div>
+             </div>
+        )
     }
 
     return (
-        <div className={style.formInner}>
-            <div className={style.formInner__topBlock}>
-                <Link className={style.formInner__linkContainer} to='/app/stats'>
-                    <div className={style.formInner__topIcon}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path className={style.formInner__icon} fillRule="evenodd" d="M10 2a1 1 0 0 0-1.79-.614l-7 9a1 1 0 0 0 0 1.228l7 9A1 1 0 0 0 10 20v-3.99c5.379.112 7.963 1.133 9.261 2.243c1.234 1.055 1.46 2.296 1.695 3.596l.061.335a1 1 0 0 0 1.981-.122c.171-2.748-.086-6.73-2.027-10.061C19.087 8.768 15.695 6.282 10 6.022z" clipRule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <span className={style.formInner__iconText}>Back</span> 
-                </Link>
-            </div>
-
+        <div className={`${style.formInner} ${style.container} ${style.formShown}`}>
             <div className={style.formInner__pollStat}>
-                <h1 className={style.formInner__title}>{poll.title}</h1>
+                <h1 className={`${style.formInner__title} ${style.formShown__title}`}>{poll.title}</h1>
                 
                 <form
                     onSubmit={(e) => {
@@ -106,11 +99,11 @@ const WorkingPage = () => {
                         e.stopPropagation();
                         form.handleSubmit();
                     }}
-                    className={formStyle.form}
+                    className={style.form}
                 >
                     {poll.questions.map((question, qIndex) => (
-                        <div key={qIndex} className={style.formInner__item}>
-                            <h2 className={style.formInner__subtitle}>{question.text}</h2>
+                        <div key={qIndex} className={style.formShown__item}>
+                            <h2 className={`${style.formInner__subtitle} ${style.formShown__subtitle}`}>{question.text}</h2>
                             <form.Field
                                 name={`answers.${qIndex}`}
                                 validators={{
@@ -123,9 +116,9 @@ const WorkingPage = () => {
                                 }}
                             >
                                 {(field) => (
-                                    <div className={style.formInner__options}>
+                                    <div className={style.form__radioContainer}>
                                         {question.options.map((option, oIndex) => (
-                                            <div key={oIndex} className={style.formInner__option}>
+                                            <div key={oIndex}>
                                                 <input
                                                     type="radio"
                                                     id={`q${qIndex}-o${oIndex}`}
@@ -133,11 +126,11 @@ const WorkingPage = () => {
                                                     value={option}
                                                     checked={field.state.value === option}
                                                     onChange={() => field.handleChange(option)}
-                                                    className={formStyle.form__radio}
+                                                    className={style.form__radio}
                                                 />
                                                 <label 
                                                     htmlFor={`q${qIndex}-o${oIndex}`}
-                                                    className={formStyle.form__radioLabel}
+                                                    className={style.form__radioLabel}
                                                 >
                                                     {option}
                                                 </label>
@@ -151,20 +144,19 @@ const WorkingPage = () => {
                     ))}
 
                     <form.Subscribe
-                        selector={(state) => [state.canSubmit, state.isSubmitting]}
+                        selector={(state) => [state.canSubmit, state.isSubmitting, state.errorMap]}
                     >
-                        {([canSubmit, isSubmitting, submitError]) => (
+                        {([canSubmit, isSubmitting, errorMap]) => (
                             <>
-                                {submitError && (
-                                    <div className={formStyle.form__error}>{submitError}</div>
-                                )}
                                 <button 
                                     type="submit" 
-                                    className={formStyle.form__submit}
-                                    disabled={!canSubmit || isSubmitting}
+                                    className={style.form__sumbit}
+                                    disabled={!canSubmit as boolean  || isSubmitting as boolean }
                                 >
                                     {isSubmitting ? 'Submitting...' : 'Submit Vote'}
                                 </button>
+                                <span className={`${style.form__mainError} ${style.formShown__errorMain}`}>{typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}</span>
+
                             </>
                         )}
                     </form.Subscribe>

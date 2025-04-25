@@ -1,4 +1,5 @@
 @import "../../global.module.scss";
+@import "./FormInner.module.scss";
 @import "Ui.module.scss";
 
 
@@ -100,11 +101,50 @@
         font-size: 12px;
         margin-top: 4px;
         margin-left: 8px;
+        grid-column: 1 / -1;
     }
 
     &__mainError {
         color: $red;
         text-align: center;
+    }
+
+    &__radioContainer {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        column-gap: 16px;
+        row-gap: 24px;
+    }
+
+    &__radio {
+        display: none;
+    }
+
+    &__radio:checked + .form__radioLabel {
+        border: 3px solid $main-color;
+        background-color: $main-color;
+        color: $white;
+    }
+
+    &__radioLabel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: $font-size-big;
+        font-weight: $font-weight-bold;
+        column-gap: 8px;
+        padding: 40px 32px;
+        border-radius: 16px;
+        border: 3px solid $main-color;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        // background-color: $main-color;
+        // color: $white; 
+
+        &:hover {
+            transform: scale(1.01);
+            box-shadow: 1px 1px 5px $main-color;
+        }
     }
 }
 

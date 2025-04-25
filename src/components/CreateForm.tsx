@@ -6,6 +6,7 @@ import React, { useState, useEffect } from 'react';
 import { createPoll, getForm, updatePoll } from '../api/formsAPI';
 import { Poll } from '../types/inerfaces';
 import { useAuth } from '../hooks/useAuth';
+import { AxiosError } from 'axios';
 
 const CreateForm: React.FC = () => {
     const navigate = useNavigate();
@@ -16,19 +17,27 @@ const CreateForm: React.FC = () => {
     ]);
     const [poll, setPoll] = useState<Poll | null>(null);
     const [formValid, setFormValid] = useState(false);
+    const [error, setError] = useState<string | null>(null); 
 
 
     useEffect(() => {
         const fetchPoll = async () => {
             if (id && token) {
-                const poll = await getForm(id, token);
-                const questions = poll.questions.map(q => ({
-                    text: q.text,
-                    options: q.options,
-                    errors: { text: '', options: q.options.map(() => '') }
-                }));
-                setPoll(poll);
-                setQuestions(questions);
+                try {
+                    const poll = await getForm(id, token);
+                    const questions = poll.questions.map(q => ({
+                        text: q.text,
+                        options: q.options,
+                        errors: { text: '', options: q.options.map(() => '') }
+                    }));
+                    setPoll(poll);
+                    setQuestions(questions); 
+                } catch (error) {
+                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
+                        setError(error.response.data.message);
+                    }
+                    setError('Failed to create poll');
+                }
             }
         };
         
@@ -81,6 +90,9 @@ const CreateForm: React.FC = () => {
                     navigate(`/app/stats/${poll._id}`);
                     return null;
                 } catch (error) {
+                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
+                        return error.response.data.message;
+                    }
                     console.error('Error creating poll:', error);
                     return 'Failed to create poll';
                 }
@@ -196,6 +208,11 @@ const CreateForm: React.FC = () => {
             form.handleSubmit();
         }
     };
+    if ((error || !poll) && id) {
+        return (
+            <div className={style.formInner__error}>Error: {error || "Poll not found"}</div>
+        )
+    }
 
     return (
         <div className={style.formCreate__block}>

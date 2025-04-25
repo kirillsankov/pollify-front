@@ -9,7 +9,7 @@
         margin-bottom: 32px;
     }
 
-    &__topBlockLeft {
+    &__topBlockContainer {
         display: flex;
         column-gap: 8px;
     }
@@ -25,6 +25,11 @@
         column-gap: 4px;
         text-decoration: none;
         color: $white;
+        border: none;
+
+        &__error {
+            background-color: $red;
+        }
     }
     &__topIcon {
 

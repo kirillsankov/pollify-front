@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import StackedBarChart from "./charts/StackedBarChart";
-import { getForm } from "../api/formsAPI";
+import { deletePoll, getForm } from "../api/formsAPI";
 import { Poll, Question } from "../types/inerfaces";
 import style from '../assets/styles/FormInner.module.scss';
 import { AxiosError } from "axios";
@@ -11,6 +11,8 @@ import ButtonWithIcon from "./UI/ButtonWithIcon";
 
 
 const FormInner = () => {
+    const navigate = useNavigate();
+
     const { id } = useParams();
     const { token } = useAuth();
     const [questions, setQuestions] = useState<Question[]>([]);
@@ -33,6 +35,13 @@ const FormInner = () => {
         fetchPoll();
     }, [id, token]);
 
+    const deleteForm = async () => {
+        if(id && token) {
+            await deletePoll(id, token);
+            navigate('/app/stats');
+        }
+    }
+
     if (error) {
         return <div className={style.formInner__error}>Error: {error}</div>;
     }
@@ -47,7 +56,7 @@ const FormInner = () => {
     return (
         <div className={style.formInner}>
             <div className={style.formInner__topBlock}>
-                <div className={style.formInner__topBlockLeft}>
+                <div className={style.formInner__topBlockContainer}>
                     <ButtonWithIcon 
                         stringTo="/app/stats"
                         icon={
@@ -67,15 +76,27 @@ const FormInner = () => {
                         children='Open'
                     />
                 </div>
-                <ButtonWithIcon 
-                    stringTo={`/app/edit/${id}`}
-                    icon={
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                            <path className={style.formInner__icon} d="M16 2.012l3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287l-3-3zm0 6h16v2H4z"></path>
-                        </svg>
-                    }
-                    children='Edit'
-                />
+                <div className={style.formInner__topBlockContainer}>
+                    <ButtonWithIcon 
+                        stringTo={`/app/edit/${id}`}
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path className={style.formInner__icon} d="M16 2.012l3 3L16.713 7.3l-3-3zM4 14v3h3l8.299-8.287l-3-3zm0 6h16v2H4z"></path>
+                            </svg>
+                        }
+                        children='Edit'
+                    />
+                    <ButtonWithIcon 
+                        onClick={deleteForm} 
+                        icon={
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path className={style.formInner__icon} d="m9.4 16.5l2.6-2.6l2.6 2.6l1.4-1.4l-2.6-2.6L16 9.9l-1.4-1.4l-2.6 2.6l-2.6-2.6L8 9.9l2.6 2.6L8 15.1zM7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21z"></path>
+                            </svg>
+                        }
+                        children='Delete'
+                        className={style.formInner__linkContainer__error}
+                    />
+                </div>
             </div>
             <div className={style.formInner__pollStat}>
                 <h1 className={style.formInner__title}>{poll.title}</h1>
