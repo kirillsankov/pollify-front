@@ -33,6 +33,13 @@
         text-align: center;
     }
 
+    &__subtitle {
+        font-size: $font-size-h3;
+        font-weight: $font-weight-bold;
+        margin-bottom: 24px;
+        text-align: center;
+    }
+
     &__item {
         margin-bottom: 16px;
         position: relative;
@@ -107,6 +114,12 @@
     &__mainError {
         color: $red;
         text-align: center;
+
+        &__center {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+        }
     }
 
     &__radioContainer {
@@ -136,12 +149,20 @@
         padding: 40px 32px;
         border-radius: 16px;
         border: 3px solid $main-color;
-        cursor: pointer;
         transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         // background-color: $main-color;
         // color: $white; 
+        &:not(div) {
+            cursor: pointer;
+        }
 
-        &:hover {
+        &__selected {
+            border: 3px solid $main-color;
+            background-color: $main-color;
+            color: $white;
+        }
+
+        &:not(div):hover {
             transform: scale(1.01);
             box-shadow: 1px 1px 5px $main-color;
         }

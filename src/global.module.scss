@@ -1,18 +1,7 @@
-$main-color: #7334E6;
-$second-color: #F5F5F5;
-$custom-black: #1A1A1A;
-$light-black: #222222;
-$red: #ee204d;
-$white: #fff;
+@import "./fonts.scss";
+@import "./volumes.scss";
 
-$font-family: 'Roboto', sans-serif;
-$font-size: 16px;
-$font-size-big: 18spx;
-$font-size-h1: 42px;
-$font-size-h2: 32px;
-$font-size-h3: 24px;
-$font-weight-regular: 400;
-$font-weight-bold: 600;
+
 
 * {
     padding: 0;
@@ -46,4 +35,11 @@ img {
 .link {
     color: $main-color;
     text-decoration: none;
+    transition: color 0.3s ease;
+
+    @media screen and (min-width: 1280px)  {
+        &:hover {
+            color: darken($main-color, 20%);
+        }
+    }
 }

@@ -8,13 +8,17 @@ import RegisterPage from './pages/RegisterPage';
 import UnauthRoute from './components/UnauthRoute';
 import Application from './pages/Aplication';
 import WorkingPage from './pages/WorkingPage';
+import { Home } from './pages/Home';
+import { createContext , useRef } from 'react';
 
 function App() {
+  const refMain = useRef(null);
   return (
     <>
       <Header/>
-          <main className={stype.main}>
+          <main ref={refMain} className={stype.main}>
             <Routes>
+              <Route path="/" element={<Home mainRef={refMain} />} /> 
               <Route element={<PrivateRoute/>}>
                 <Route path="/form/:id" element={<WorkingPage />} /> 
                 <Route path="/app/*" element={<Application />} />

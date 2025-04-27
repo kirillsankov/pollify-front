@@ -11,13 +11,10 @@ function PrivateRoute() {
 
   useEffect(() => {
     const checkToken = async () => {
-        console.log('checkToken', token);
       if (token) {
         const result = await validateToken(token);
         setIsValid(!!result);
-        console.log('tok', result);
       } else {
-        console.log(false);
         setIsValid(false);
       }
     };

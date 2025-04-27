@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import axios, { AxiosError } from "axios";
-import { getForm, voteForm } from "../api/formsAPI";
-import { Poll } from "../types/inerfaces";
+import { useParams } from "react-router-dom";
+import { AxiosError } from "axios";
+import { checkVoteForm, getForm, voteForm } from "../api/formsAPI";
+import { Poll, Question } from "../types/inerfaces";
 import style from '../assets/styles/WorkingPage.module.scss';
 import Loader from "../components/UI/Loader";
 import { useAuth } from "../hooks/useAuth";
@@ -11,27 +11,28 @@ import { FieldInfo } from "../components/UI/FieldInfo";
 
 const WorkingPage = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
     const { token } = useAuth();
     const [poll, setPoll] = useState<Poll | null>(null);
     const [loading, setLoading] = useState(true);
+    const [voted, setVoted] = useState<{ isVoted: boolean; userId: string } | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const fetchPoll = async () => {
-            if (id && token) {
-                try {
-                    const pollData = await getForm(id, token);
-                    setPoll(pollData);
-                } catch (error) {
-                    setError("Failed to load poll data");
-                    console.error(error);
-                } finally {
-                    setLoading(false);
-                }
+    const fetchPoll = async () => {
+        if (id && token) {
+            try {
+                const pollData = await getForm(id, token);
+                const isVotedPoll = await checkVoteForm(id, token);
+                setVoted(isVotedPoll)
+                setPoll(pollData);
+            } catch (error) {
+                setError("Failed to load poll data");
+                console.error(error);
+            } finally {
+                setLoading(false);
             }
-        };
-        
+        }
+    };
+    useEffect(() => {
         fetchPoll();
     }, [id, token]);
 
@@ -51,19 +52,8 @@ const WorkingPage = () => {
                         return "Error";
                     }
                     await voteForm(id, answersArray, token);
-                    await axios.post(
-                        `${process.env.REACT_APP_BACK_LINK}/polls/${id}/vote`,
-                        { questions: answersArray },
-                        {
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json',
-                            },
-                        }
-                    );
-                    
-                    navigate(`/app/stats/${id}`);
-                    // return { status: "success" };
+                    fetchPoll();
+                    window.scrollTo(0, 0);
                 } catch (error) {
                     console.log(error);
                     if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
@@ -76,8 +66,52 @@ const WorkingPage = () => {
         }
     });
 
+    const isVoteCurrent = (item: Question, option: string) => {
+        const votedString = item.votedUsers.find((item) => {
+            if(item.startsWith(voted?.userId || '')) {
+                return true;
+            }
+        })
+        if(!votedString) {
+            return '';
+        }
+        const optionVoted = votedString.split('-').slice(1, votedString.length).join('-');
+        if(optionVoted === option) {
+            return style.form__radioLabel__selected;
+        }
+    };
+
     if (loading) {
         return <Loader />;
+    }
+
+    if(voted?.isVoted) {
+        return (
+            <div className={`${style.container}  ${style.formShown} ${style.formInner__pollStat}`}>
+                <h1 className={`${style.formInner__title} ${style.formShown__title} ${style.formShown__title__success}`}>
+                You have successfully completed the "{poll?.title}" survey, below are your results</h1>
+                <div className={style.formShown__item}>
+                    {poll?.questions.map((item, qIndex) => {
+                        return (
+                        <div key={qIndex} className={style.formShown__item}>
+                            <h2 className={`${style.formInner__subtitle} ${style.formShown__subtitle}`}>{item.text}</h2>
+                            <div className={`${style.form__radioContainer}`}>
+                            {
+                                item.options.map((option) => {
+                                    return (
+                                        <div className={`${style.form__radioLabel} ${isVoteCurrent(item, option)}`}>
+                                            {option}
+                                        </div>
+                                    )
+                                })
+                            }
+                            </div>
+                        </div>
+                        )
+                    })}
+                </div>
+             </div>
+        )
     }
 
     if (error || !poll) {

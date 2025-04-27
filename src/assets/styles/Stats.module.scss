@@ -2,6 +2,10 @@
 
 
 .stat {
+    &__h1 {
+        display: none;
+    }
+
     &__list {
         display: flex;
         flex-direction: column;

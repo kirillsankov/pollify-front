@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import CreateForm from "../components/CreateForm";
 import Stats from "../components/Stats";
 import style from '../assets/styles/Application.module.scss'
@@ -15,6 +15,7 @@ const Application = () => {
                     <Route path="stats" element={<Stats/>}/>
                     <Route path="stats/:id" element={<FormInner/>}/>
                     <Route path="edit/:id" element={<CreateForm/>}/>
+                    <Route path="*" element={<Navigate to="stats" replace />} />
                 </Routes>
             </>
         </div>

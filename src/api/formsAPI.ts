@@ -37,6 +37,18 @@ export const voteForm = async (id: string, answersArray: string[], token: string
 );
   return response.data;
 }
+export const checkVoteForm = async (id: string, token: string): Promise<{ isVoted: boolean; userId: string }> => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_BACK_LINK}/polls/${id}/check-vote`,
+    {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    }
+);
+  return response.data;
+}
 export const createPoll = async (pollData: CreatePollData, token: string): Promise<Poll> => {
   const response = await axios.post(
     `${process.env.REACT_APP_BACK_LINK}/polls`, 

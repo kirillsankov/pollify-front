@@ -6,6 +6,10 @@
 
     &__title  {
         margin-bottom: 32px;
+
+        &__success {
+            color: $green;
+        }
     }
     
     &__subtitle  {
