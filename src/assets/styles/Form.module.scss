@@ -160,7 +160,17 @@
     &__title {
         font-size: 32px;
         font-weight: 700;
+    }
+    
+    &__titleContainer {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
         margin-bottom: 32px;
+    }
+
+    &__icon {
+        fill: $white;
     }
 
     &__subtitle {

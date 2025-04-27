@@ -16,3 +16,15 @@ export interface Poll {
     votes: Record<string, number>;
     votedUsers: string[];
   }
+
+  export interface PollGenerator {
+    title: string,
+    questions: QuestionGenerator[];
+  }
+
+  
+  export interface QuestionGenerator {
+    text: string, 
+    options: string[], 
+    errors: { text: string, options: string[] }
+  }

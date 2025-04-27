@@ -19,10 +19,15 @@ export function Header() {
                 {
                     !isAuthenticated ?
                     <Button href='/login'>Sign In</Button> :
-                    <Button onClick={() => {
-                        dispatch(logout());
-                        navigate('/login');
-                    }}>Exit</Button>
+                    <nav className={headerStyle.header__buttonContainer}>
+                        <Button onClick={() => {
+                            navigate('/app');
+                        }}>App</Button>
+                        <Button onClick={() => {
+                            dispatch(logout());
+                            navigate('/login');
+                        }}>Exit</Button>
+                    </nav>
                 }
             </div>
         </header>
