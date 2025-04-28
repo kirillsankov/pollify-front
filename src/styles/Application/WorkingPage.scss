@@ -1,0 +1,25 @@
+.formShown {
+    padding: 40px 15px;
+
+    &__title  {
+        margin-bottom: 32px;
+
+        &__success {
+            color: $green;
+        }
+    }
+    
+    &__subtitle  {
+        margin-bottom: 18px;
+    }
+
+    &__item {
+        margin-bottom: 56px;
+    }
+
+    &__errorMain {
+        width: 100%;
+        display: block;
+        margin-top: 8px;
+    }
+}

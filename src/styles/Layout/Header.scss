@@ -1,0 +1,23 @@
+
+.header {
+    padding: 24px 0;
+    border-radius: 0 0 64px 64px;
+    background-color: $second-color;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    &__logo {
+        width: 150px; 
+        display: block;
+    }
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &__buttonContainer {
+        display: flex;
+        column-gap: 8px;
+    }
+}

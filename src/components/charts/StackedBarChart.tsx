@@ -1,7 +1,8 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Question } from '../../types/inerfaces';
 import { useEffect, useState } from 'react';
-import style from '../../assets/styles/FormInner.module.scss';
+import style from '../../styles/Application/index.module.scss';
+
 
 interface Props {
     questions: Question[];
