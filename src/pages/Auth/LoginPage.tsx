@@ -129,7 +129,7 @@ const LoginPage = ({ callBackSuccess }: Props) => {
                   <button className={style.form__sumbit} type="submit" disabled={!canSubmit}>
                     {isSubmitting ? 'Loading...' : 'Submit'}
                   </button>
-                  <span className={style.form__mainError}>{typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}</span>
+                  {typeof errorMap === 'object' && 'onSubmit' in errorMap ? <span className={style.form__mainError}>{errorMap.onSubmit}</span> : null}
 
                   <p className={style.form__text}>No account? <Link className={style.link} to="/register">To create...</Link></p>
                 </>

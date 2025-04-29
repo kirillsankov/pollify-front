@@ -53,7 +53,7 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
     return (
         <Popup isOpen={popup} onClose={() => setPopup(false)} title="Generate AI Poll">
             <div className={formStyle.form__block}>
-                <h3 className={formStyle.form__subtitle}>
+                <h3 className={`${formStyle.form__subtitle} ${formStyle.popup__subtitle}`}>
                     Let AI generate a poll for you.
                 </h3>
                 
@@ -80,7 +80,7 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
                         }}
                     >
                         {(field) => (
-                            <div className={formStyle.form__item}>
+                            <div className={`${formStyle.form__item} ${formStyle.formCreate__item}`}>
                                 <input
                                     id={field.name}
                                     name={field.name}
@@ -115,7 +115,7 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
                         }}
                     >
                         {(field) => (
-                            <div className={formStyle.form__item}>
+                            <div className={`${formStyle.form__item} ${formStyle.formCreate__item}`}>
                                 <input
                                     id={field.name}
                                     name={field.name}

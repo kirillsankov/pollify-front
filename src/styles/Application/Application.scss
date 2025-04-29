@@ -1,5 +1,6 @@
 .aside {
     position: sticky;
+    z-index: 999;
     top: 120px;
     padding: 24px 16px;
     border-radius: 16px;
@@ -7,12 +8,28 @@
     max-width: max-content;
     width: 100%;
     height: 100%;
+    @media screen and (max-width: $tablet-desctop) {
+        max-width: 100%;
+        top: 95px;
+    }
+    @media screen and (max-width: $mobile-desctop) {
+        top: 90px;
+    }
 
     &__container {
         padding: 40px 15px;
         display: flex;
         justify-content: space-between;
         column-gap: 24px;
+
+        @media screen and (max-width: $tablet-desctop) {
+            flex-direction: column;
+            row-gap: 32px;
+        }
+
+        @media screen and (max-width: $mobile-desctop) {
+            row-gap: 24px;
+        }
     }
 
     &__list {
@@ -20,6 +37,11 @@
         flex-direction: column;
         row-gap: 16px; 
         width: 100%;
+
+        @media screen and (max-width: $tablet-desctop) {
+            flex-direction: row;
+            column-gap: 24px;
+        }
     }
     
     &__link {

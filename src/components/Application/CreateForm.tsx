@@ -244,11 +244,11 @@ const CreateForm: React.FC = () => {
                 name="title"
                 validators={validateTitle}
                 children={(field) => (
-                    <div className={style.form__item}>
+                    <div className={`${style.form__item} ${style.formCreate__item}`}>
                         <input
                             id={field.name}
                             name={field.name}
-                            className={`${style.form__input} ${field.state.meta.errors.length ? style.form__inputError : ''}`}
+                            className={`${style.form__input} ${style.formCreate__input} ${field.state.meta.errors.length ? style.form__inputError : ''}`}
                             type="text"
                             value={field.state.value}
                             onChange={(e) => field.handleChange(e.target.value)}
@@ -280,7 +280,7 @@ const CreateForm: React.FC = () => {
                         
                         <div className={`${style.formCreate__item} ${style.form__item}`}>
                             <input
-                                className={`${style.form__input} ${question.errors.text ? style.form__inputError : ''}`}
+                                className={`${style.form__input} ${style.formCreate__input} ${question.errors.text ? style.form__inputError : ''}`}
                                 type="text"
                                 value={question.text}
                                 onChange={(e) => updateQuestionText(questionIndex, e.target.value)}
@@ -297,9 +297,9 @@ const CreateForm: React.FC = () => {
                             <h4 className={style.formCreate__optionsTitle}>Options</h4>
                             
                             {question.options.map((option, optionIndex) => (
-                                <div key={optionIndex} className={`${style.form__optionItem} ${style.form__item}`}>
+                                <div key={optionIndex} className={`${style.form__optionItem} ${style.form__item} ${style.formCreate__item}`}>
                                     <input
-                                        className={`${style.form__input} ${style.formCreate__inputOption} ${question.errors.options[optionIndex] ? style.form__inputError : ''}`}
+                                        className={`${style.form__input} ${style.formCreate__input} ${style.formCreate__inputOption} ${question.errors.options[optionIndex] ? style.form__inputError : ''}`}
                                         type="text"
                                         value={option}
                                         onChange={(e) => updateOption(questionIndex, optionIndex, e.target.value)}
@@ -326,7 +326,7 @@ const CreateForm: React.FC = () => {
                             
                             <button 
                                 type="button" 
-                                className={`${style.formCreate__addBtn} ${style.form__input}`}
+                                className={`${style.formCreate__addBtn} ${style.form__input} ${style.formCreate__input}`}
                                 onClick={() => addOption(questionIndex)}
                             >
                                 <span>

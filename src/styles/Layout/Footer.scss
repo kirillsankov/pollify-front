@@ -9,6 +9,17 @@
     padding: 80px 15px 42px;
     z-index: 100;
 
+    
+    @media screen and (max-width: $sceed-desctop) {
+        border-radius: 32px 32px 0 0 ;
+        height: 50px;
+        padding: 60px 15px 32px;
+    }
+
+    @media screen and (max-width: $mobile-desctop) {
+        padding: 40px 15px 24px;
+    }
+
     &__container {
         width: 100%;
         margin-top: auto;

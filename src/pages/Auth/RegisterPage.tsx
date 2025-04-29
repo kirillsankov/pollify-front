@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from '@tanstack/react-form';
 import { FieldInfo } from '../../components/shared/index';
 import { register } from '../../api/authApi';
-import style from '../../styles/Shared/index.module.scss';
+import style from '../../styles/Application/index.module.scss';
 
 
 const RegisterPage: React.FC = () => {

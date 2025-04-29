@@ -20,6 +20,10 @@ body {
     background-color: #fff;
     display: flex;
     flex-direction: column;
+
+    @media screen and (max-width: $mobile-desctop) {
+        font-size: $font-size-mobile;
+    }
 }
 .main {
     flex: 1 1 auto;

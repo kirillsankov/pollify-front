@@ -8,6 +8,10 @@
         flex-direction: column;
         row-gap: 24px;
         width: 100%;
+
+        @media screen and (max-width: $mobile-desctop) {
+            row-gap: 16px;
+        }
     }
     
     &__block {
@@ -25,10 +29,16 @@
         text-decoration: none;
         transition: transform 0.3s ease-in-out;
 
-        @media screen and (min-width: 1280px) {
+        @media screen and (min-width: $sceed-desctop) {
             &:hover {
                 transform: scale(1.01);
             }
+        }
+
+        @media screen and (max-width: $mobile-desctop) {
+            grid-template-columns: 1fr;
+            row-gap: 8px;
+            column-gap: 18px;
         }
     }
 
@@ -42,6 +52,11 @@
         font-size: $font-size-h2;
         font-weight: $font-weight-bold;
         color: $custom-black;
+
+        
+        @media screen and (max-width: $mobile-desctop) {
+            font-size: $font-size-h3;
+        }
     }
 
     &__text {

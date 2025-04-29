@@ -33,9 +33,20 @@
   }
 
   &__title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: $font-size-big;
+    font-weight: $font-weight-bold;
+
+    @media screen and (max-width: $mobile-desctop) {
+      font-size: $font-size;
+    }
+  }
+
+  &__subtitle {
+    margin-bottom: 24px;
+
+    @media screen and (max-width: $mobile-desctop) {
+      margin-bottom: 16px;
+    }
   }
 
   &__closeButton {
