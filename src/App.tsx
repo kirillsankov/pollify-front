@@ -16,7 +16,7 @@ function App() {
       <Header/>
           <main ref={refMain} className={style.main}>
             <Routes>
-              <Route path="/" element={<Home mainRef={refMain} />} /> 
+              <Route path="/" element={<Home/>} /> 
               <Route element={<PrivateRoute/>}>
                 <Route path="/form/:id" element={<WorkingPage />} /> 
                 <Route path="/app/*" element={<Application />} />

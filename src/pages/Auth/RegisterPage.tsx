@@ -33,7 +33,13 @@ const RegisterPage: React.FC = () => {
   const validatorsUsername = {
     onChange: ({ value }: { value: string }) => {
       if (!value) {
-        return 'Password is required';
+        return 'Username is required';
+      }
+      if (value.length < 4) {
+        return 'Username must be at least 4 characters';
+      }
+      if (value.length > 20) {
+        return 'Username must be less than 20 characters';
       }
     }
   }
@@ -44,17 +50,16 @@ const RegisterPage: React.FC = () => {
       if (!value) {
         return 'Password is required';
       }
-      if (value.length < 6) {
-        return 'Password must be at least 6 characters';
+      if (value.length < 8) {
+        return 'Password must be at least 8 characters';
       }
-      if (!/[A-Z]/.test(value)) {
-        return 'Password must contain at least one uppercase letter';
+      if (value.length > 30) {
+        return 'Password must be less than 30 characters';
       }
-      if (!/[a-z]/.test(value)) {
-        return 'Password must contain at least one lowercase letter';
-      }
-      if (!/[0-9]/.test(value)) {
-        return 'Password must contain at least one number';
+      
+      const passwordRegex = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+      if (!passwordRegex.test(value)) {
+        return 'Password must contain at least one uppercase letter, one lowercase letter, and one number or special character';
       }
     }
   }

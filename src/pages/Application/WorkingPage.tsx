@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
-import { checkVoteForm, getForm, voteForm } from "../../api/formsAPI";
-import { Poll, Question } from "../../types/inerfaces";
+import { checkVoteForm, getForm, getShortForms, voteForm } from "../../api/formsAPI";
+import { Poll, PollShort, Question } from "../../types/inerfaces";
 import { Loader } from "../../components/shared/index";
 import { useAuth } from "../../hooks/useAuth";
 import { useForm } from "@tanstack/react-form";
@@ -14,7 +14,7 @@ import style from '../../styles/Application/index.module.scss';
 const WorkingPage = () => {
     const { id } = useParams();
     const { token } = useAuth();
-    const [poll, setPoll] = useState<Poll | null>(null);
+    const [poll, setPoll] = useState<PollShort | null>(null);
     const [loading, setLoading] = useState(true);
     const [voted, setVoted] = useState<{ isVoted: boolean; userId: string } | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ const WorkingPage = () => {
     const fetchPoll = async () => {
         if (id && token) {
             try {
-                const pollData = await getForm(id, token);
+                const pollData = await getShortForms(id, token);
                 const isVotedPoll = await checkVoteForm(id, token);
                 setVoted(isVotedPoll)
                 setPoll(pollData);

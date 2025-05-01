@@ -6,23 +6,7 @@ import analysPhoto from '../../assets/images/analys.webp';
 import timePhoto from '../../assets/images/time.webp';
 import styles from '../../styles/Home/index.module.scss';
 
-interface IProps {
-    mainRef: React.RefObject<HTMLDivElement | null>;
-}
-
-export function Home({mainRef}: IProps) {
-    // useEffect(() => {
-    //     const main = mainRef.current; 
-    //     if(!main) {
-    //         return;
-    //     }
-    //     main.style.marginTop = '-100px';
-    //     main.style.marginBottom = '-100px';
-
-    //     return () => {
-    //         main.style.cssText = '';
-    //     }
-    // })
+export function Home() {
     return (
         <div className={styles.home}>
             <section className={styles.hero}>

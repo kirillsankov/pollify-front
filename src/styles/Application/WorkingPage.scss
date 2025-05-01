@@ -7,14 +7,24 @@
         &__success {
             color: $green;
         }
+
+        @media screen and (max-width: $mobile-desctop) {
+            margin-bottom: 24px;
+        }
     }
     
     &__subtitle  {
         margin-bottom: 18px;
+        @media screen and (max-width: $mobile-desctop) {
+            margin-bottom: 16px;
+        }
     }
 
     &__item {
         margin-bottom: 56px;
+        @media screen and (max-width: $mobile-desctop) {
+            margin-bottom: 40px;
+        }
     }
 
     &__errorMain {

@@ -39,6 +39,7 @@ const CreateForm: React.FC = () => {
                 } catch (error) {
                     if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
                         setError(error.response.data.message);
+                        return;
                     }
                     setError('Failed to create poll');
                 }

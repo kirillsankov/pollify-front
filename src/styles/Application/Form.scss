@@ -155,6 +155,15 @@
         grid-template-columns: 1fr 1fr 1fr;
         column-gap: 16px;
         row-gap: 24px;
+
+        @media screen and (max-width: $mobile-desctop) {
+            row-gap: 16px;
+            grid-template-columns: 1fr 1fr;
+        }
+        @media screen and (max-width: $mobile) {
+            grid-template-columns: 1fr;
+            row-gap: 8px;
+        }
     }
 
     &__radio {
@@ -180,6 +189,15 @@
         transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         // background-color: $main-color;
         // color: $white; 
+
+        @media screen and (max-width: $mobile-desctop) {
+            font-size: $font-size;
+            padding: 24px 18px;
+        }
+        @media screen and (max-width: $mobile) {
+            padding: 18px 16px;
+        }
+
         &:not(div) {
             cursor: pointer;
         }
@@ -189,11 +207,13 @@
             background-color: $main-color;
             color: $white;
         }
-
-        &:not(div):hover {
-            transform: scale(1.01);
-            box-shadow: 1px 1px 5px $main-color;
+        @media screen and (min-width: $sceed-desctop) {
+            &:not(div):hover {
+                transform: scale(1.01);
+                box-shadow: 1px 1px 5px $main-color;
+            }
         }
+        
     }
 }
 

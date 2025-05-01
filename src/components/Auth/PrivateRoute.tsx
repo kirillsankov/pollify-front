@@ -1,42 +1,20 @@
-import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { validateToken } from '../../api/authApi';
 import { Loader } from '../shared/index';
 import { useAuth } from '../../hooks/useAuth';
 import { LoginPage } from '../../pages/Auth/index';
 
 function PrivateRoute() {
-  const { token } = useAuth();
-  const [isValid, setIsValid] = useState<boolean | null>(null);
+  const { isAuthenticated, isLoading } = useAuth();
 
-  useEffect(() => {
-    const checkToken = async () => {
-      if (token) {
-        const result = await validateToken(token);
-        setIsValid(!!result);
-      } else {
-        setIsValid(false);
-      }
-    };
-
-    checkToken();
-  }, [token]);
-
-  if (isValid === null) {
-    return (
-      <Loader/>
-    );
+  if (isLoading) {
+    return <Loader />;
   }
 
-  if (!isValid) {
-    return <LoginPage callBackSuccess={
-      () => {
-        setIsValid(true);
-      }
-    }/>;
+  if (!isAuthenticated) {
+    return <LoginPage />;
   }
 
   return <Outlet />;
-};
+}
 
 export default PrivateRoute;

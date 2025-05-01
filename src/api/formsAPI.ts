@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Poll, PollGenerator, QuestionGenerator } from '../types/inerfaces';
+import { Poll, PollGenerator, PollShort, QuestionGenerator } from '../types/inerfaces';
 interface CreatePollData {
   title: string;
   questions: {
@@ -10,6 +10,14 @@ interface CreatePollData {
 
 export const getForms = async (token: string): Promise<Poll[]> => {
   const response = await axios.get(`${process.env.REACT_APP_BACK_LINK}/polls`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+export const getShortForms = async (id: string,token: string): Promise<PollShort> => {
+  const response = await axios.get(`${process.env.REACT_APP_BACK_LINK}/polls/short/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

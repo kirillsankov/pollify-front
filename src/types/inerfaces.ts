@@ -9,6 +9,11 @@ export interface Poll {
     createAt: string;
     votedUsers: string;
   }
+  export interface PollShort {
+    title: string;
+    questions: Question[];
+    votedUsers: string;
+  }
   
   export interface Question {
     text: string;
