@@ -15,7 +15,6 @@ interface IProps {
 export const GenerateForm = ({popupState, onGenerate}: IProps) => {
     const [popup, setPopup] = popupState;
     const { token } = useAuth();
-    const [isGenerating, setIsGenerating] = useState(false);
 
     const form = useForm({
         defaultValues: {
@@ -25,7 +24,6 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
         validators: {
             onSubmit: async ({ value }) => {
                 try {
-                    setIsGenerating(true);
                     if (!token) {
                         return "You must be logged in to generate a poll" ;
                     }
@@ -43,8 +41,6 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
                         return error.response.data.message;
                     }
                     return "Failed to generate poll. Please try again.";
-                } finally {
-                    setIsGenerating(false);
                 }
             } 
         }
@@ -141,9 +137,9 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
                                 <button 
                                     type="submit" 
                                     className={formStyle.form__sumbit}
-                                    disabled={!canSubmit || !!isSubmitting || isGenerating}
+                                    disabled={!canSubmit || !!isSubmitting}
                                 >
-                                    {isGenerating ? 'Generating Poll...' : 'Generate Poll'}
+                                    {isSubmitting ? 'Generating Poll...' : 'Generate Poll'}
                                 </button>
                                 <span className={`${formStyle.form__mainError} ${formStyle.form__mainError__center}`}>{typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}</span>
                             </>
