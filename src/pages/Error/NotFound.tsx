@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import style from '../../styles/Error/index.module.scss';
 
 export default function NotFound() {
     useEffect(() => {
@@ -22,8 +23,9 @@ export default function NotFound() {
     
   return (
     <>
-        <div>
-            <h1>404 - Страница не найдена</h1>
+        <div className={`${style.container} ${style.errorPage}`}>
+            <h1 className={style.errorPage__title}>404</h1>
+            <p className={style.errorPage__description}>Page not found</p>
         </div>
     </>
   );

@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const validateCurrentToken = async (): Promise<boolean> => {
     if (!token) {
       localStorage.setItem('isAuthLast', 'false');
-      setAuth(false);
+      setAuth(false);   
       return false;
     }
     
@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   
 
   useEffect(() => {
-    if(!localStorage.getItem('token')) {
+    if(!localStorage.getItem('token') && token) {
       dispatch(logout());
       navigate('/login');
     }
@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     user,
     status,
     isLoading: status === 'loading',
-    validateCurrentToken // Экспортируем функцию для ручной проверки
+    validateCurrentToken
   };
 
   return (

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Button } from '../../components/shared/index';
 import { Feature } from '../../components/Feature/index';
 import aiPhoto from '../../assets/images/ai.webp';

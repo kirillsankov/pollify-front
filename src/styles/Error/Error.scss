@@ -1,0 +1,32 @@
+.errorPage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+    padding: 100px 15px;
+
+    @media (max-width: $mobile-desctop) {
+        padding: 60px 15px;
+    }
+
+    &__title {
+        font-size: 156px;
+        font-weight: $font-weight-bold;
+        color: $main-color;
+        
+        @media (max-width: $mobile-desctop) {
+            font-size: 100px;
+        }
+    }
+
+    &__description {
+        font-size: 44px;
+        color: $light-black;
+
+        @media (max-width: $mobile-desctop) {
+            font-size: 24px;
+        }
+    }
+    
+}

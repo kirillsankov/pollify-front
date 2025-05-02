@@ -1,14 +1,13 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
-function UnauthRoute() {
-  const { isAuthenticated } = useAuth();
-  
-  if (isAuthenticated) {
-    return <Navigate to="/app/stats" replace />;
-  }
-  
-  return <Outlet />;
+interface UnauthRouteProps {
+  children: ReactNode;
 }
 
-export default UnauthRoute;
+export const UnauthRoute = ({ children }: UnauthRouteProps) => {
+  const { isAuthenticated } = useAuth();
+  
+  return !isAuthenticated ? <>{children}</> : <Navigate to="/app/stats" replace />;
+};

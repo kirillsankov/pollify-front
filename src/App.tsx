@@ -7,38 +7,41 @@ import { PrivateRoute, UnauthRoute } from './components/Auth/index';
 import { RegisterPage } from './pages/Auth/index';
 import { Application, WorkingPage } from './pages/Application/index';
 import { Home } from './pages/Home/index';
-import { useRef } from 'react';
 import { AuthProvider } from './contexts/AuthContext';
-import NotFound from './pages/Error/NotFound';
+import { NotFound } from './pages/Error/index';
 
 function App() {
-  const refMain = useRef(null);
   return (
-    <>
+    <AuthProvider>
       <Header/>
-      <main ref={refMain} className={style.main}>
+      <main className={style.main}>
         <Routes>
-          <Route path="/" element={<Home/>} errorElement={<div>Error</div>} /> 
-          <Route path="/form/:id|/app/*|/login|/register" element={
-            <AuthProvider>
-              <Routes>
-                <Route element={<PrivateRoute/>}>
-                  <Route path="form/:id" element={<WorkingPage />} /> 
-                  <Route path="app/*" element={<Application />} />
-                </Route>
-                <Route element={<UnauthRoute/>}>
-                  <Route path="login" element={<LoginPage />} />
-                  <Route path="register" element={<RegisterPage />} />
-                </Route>
-              </Routes>
-            </AuthProvider>
-          } 
-          />
+          <Route path="/" element={<Home/>}/> 
+          <Route path="/form/:id" element={
+            <PrivateRoute>
+              <WorkingPage />
+            </PrivateRoute>
+          } />
+          <Route path="/app/*" element={
+            <PrivateRoute>
+              <Application />
+            </PrivateRoute>
+          } />
+          <Route path="/login" element={
+            <UnauthRoute>
+              <LoginPage />
+            </UnauthRoute>
+          } />
+          <Route path="/register" element={
+            <UnauthRoute>
+              <RegisterPage />
+            </UnauthRoute>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer/>
-    </>
+    </AuthProvider>
   );
 }
 
