@@ -1,4 +1,4 @@
-export interface User {username: string; password: string};
+export interface User {email: string; password: string};
 
 export interface Poll {
     _id: string;

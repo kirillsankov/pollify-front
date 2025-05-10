@@ -1,0 +1,135 @@
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { resendCode, verifyEmail } from "../../api/authApi";
+import { AuthForm } from "../../components/Auth/index";
+import AuthContainer from "./AuthContainer";
+import { useEffect, useState } from "react";
+import { FormField } from "../../components/Auth/AuthForm";
+import style from '../../styles/Application/index.module.scss';
+import { SuccessMessage } from "../../components/shared/index";
+
+interface Props {
+    title: string;
+}
+
+enum VerificationStep {
+    CODE = 0,
+    SUCCESS = 1
+}
+
+const ValidateEmailPage= ({title}: Props) => {
+    const [email, setEmail] = useState<string | null>(null);
+    const [resendLoad, setResendLoad] = useState<boolean>(false);
+    const [currentStep, setCurrentStep] = useState<VerificationStep>(VerificationStep.CODE);
+    const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const currentEmail = searchParams.get('email');
+        if(!currentEmail) {
+            navigate('/register');
+        }
+        setEmail(currentEmail);
+        console.log(currentEmail);
+    }, [])
+    
+    const handleSubmit = async (values: any) => {
+        const { code } = values;
+        if(!email) {
+            navigate('/register');
+            return 'Email is required';
+        }
+        const messageData = await verifyEmail(email, code);
+        console.log(messageData);
+    
+        if(messageData.error) {
+            const errorMessage = Array.isArray(messageData.message) ? messageData.message[0] : messageData.message;
+            // if(errorMessage === 'Email already verified') {
+            //     navigate('/login');
+            //     return errorMessage;
+            // }
+            // if(errorMessage === 'User with this email does not exist') {
+            //     navigate('/register');
+            //     return errorMessage;
+            // }
+            return errorMessage;
+        }
+        
+        // Вместо прямого перенаправления показываем страницу успеха
+        setCurrentStep(VerificationStep.SUCCESS);
+        return null;
+    };    
+    
+    const validatorsCode = {
+    onChange: ({ value }: { value: string }) => {
+        if (!value) {
+        return 'Code is required';
+        }
+        if (isNaN(+value)) {
+        return 'Code must be a number';
+        }
+        if (value.length !== 6) {
+        return 'Code must be 6 digits';
+        }
+    }
+    };
+    
+    const fields: FormField[] = [
+    {
+        name: 'code',
+        label: 'Verification Code:',
+        type: 'text',
+        validators: validatorsCode
+    }
+    ];
+    
+    const renderContent = () => {
+        switch (currentStep) {
+            case VerificationStep.CODE:
+                return (
+                    <AuthForm
+                        fields={fields}
+                        onSubmit={handleSubmit}
+                        submitButtonText="Verify"
+                        defaultValues={{
+                            code: ''
+                        }}
+                        footerContent={
+                            <div>
+                                <p>Didn't receive a code?</p>
+                                <button className={style.link} onClick={async () => {
+                                    if(!email) {
+                                        navigate('/register');
+                                        return 'Email is required';
+                                    }
+                                    setResendLoad(true);
+                                    await resendCode(email);
+                                    setResendLoad(false);
+                                }}>{resendLoad ? 'Sending...' : 'Resend Code'}</button> 
+                            </div>
+                        }
+                    />
+                );
+            case VerificationStep.SUCCESS:
+                return (
+                    <SuccessMessage 
+                        onClick={() => {
+                            navigate('/login');
+                        }} 
+                        title='Email Verified Successfully' 
+                        description='Your email has been successfully verified. You can now log in to your account.' 
+                        buttonText='Go to Login' 
+                    />
+                );
+            default:
+                return null;
+        }
+    };
+    
+    return (
+        <AuthContainer title={currentStep === VerificationStep.SUCCESS ? "Email Verification" : title}>
+            {renderContent()}
+        </AuthContainer>
+    );
+}
+
+export default ValidateEmailPage;

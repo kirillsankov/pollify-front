@@ -9,6 +9,8 @@ import { Application, WorkingPage } from './pages/Application/index';
 import { Home } from './pages/Home/index';
 import { AuthProvider } from './contexts/AuthContext';
 import { NotFound } from './pages/Error/index';
+import ValidateEmailPage from './pages/Auth/ValidateEmailPage';
+import ResetPasswordPage from './pages/Auth/ResetPasswordPage';
 
 function App() {
   return (
@@ -35,6 +37,16 @@ function App() {
           <Route path="/register" element={
             <UnauthRoute>
               <RegisterPage />
+            </UnauthRoute>
+          } />
+          <Route path="/verify" element={
+            <UnauthRoute>
+              <ValidateEmailPage title='Verify Email' />
+            </UnauthRoute>
+          } />
+          <Route path="/reset-password" element={
+            <UnauthRoute>
+              <ResetPasswordPage />
             </UnauthRoute>
           } />
           <Route path="*" element={<NotFound />} />

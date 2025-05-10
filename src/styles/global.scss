@@ -40,6 +40,8 @@ img {
     color: $main-color;
     text-decoration: none;
     transition: color 0.3s ease;
+    border: none;
+    cursor: pointer;
 
     @media screen and (min-width: 1280px)  {
         &:hover {

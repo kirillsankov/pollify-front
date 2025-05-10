@@ -1,48 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from '@tanstack/react-form';
-import { FieldInfo } from '../../components/shared/index';
 import { register } from '../../api/authApi';
-import style from '../../styles/Application/index.module.scss';
+import AuthContainer from './AuthContainer';
+import { FormField } from '../../components/Auth/AuthForm';
+import { AuthForm } from '../../components/Auth/index';
 
 
 const RegisterPage: React.FC = () => {
-    const navigate = useNavigate();
-    const [password, setPassword] = React.useState<string>('');
+  const navigate = useNavigate();
+  const [password, setPassword] = useState<string>('');
 
-    const form = useForm({
-        defaultValues: {
-            username: '',
-            passwordOne: '',
-            passwordTwo: '',
-        },
-        validators: {
-          onSubmitAsync: async ({value}) => {
-            try {
-              const { username, passwordOne: password } = value;
-              await register({username, password});
-              navigate('/login');
-              return "";
-            } catch (e) {
-              return "Error, please try again later";
-            }
-          } 
-        }
-    });
+  const handleSubmit = async (values: any) => {
+    const { email, passwordOne: password } = values;
+    const registerResponse = await register({ email, password });
+    if(registerResponse.error) {
+      return Array.isArray(registerResponse.message) ? registerResponse.message[0] : registerResponse.message;
+    }
+    navigate(`/verify?email=${encodeURIComponent(email)}`);
+    return null;
+  };
 
-  const validatorsUsername = {
+  const validateEmail = {
     onChange: ({ value }: { value: string }) => {
       if (!value) {
-        return 'Username is required';
+        return 'Email is required';
       }
-      if (value.length < 4) {
-        return 'Username must be at least 4 characters';
-      }
-      if (value.length > 20) {
-        return 'Username must be less than 20 characters';
+      
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      
+      if (!emailRegex.test(value)) {
+        return 'Please enter a valid email address';
       }
     }
-  }
+  };
 
   const validatorsPasswordOne = {
     onChange: ({ value }: { value: string }) => {
@@ -62,110 +52,53 @@ const RegisterPage: React.FC = () => {
         return 'Password must contain at least one uppercase letter, one lowercase letter, and one number or special character';
       }
     }
-  }
+  };
 
   const validatorsPasswordTwo = {
     onChange: ({ value }: { value: string }) => {
       if (!value) {
         return 'Confirm password is required';
       }
-      if(password !== value) {
+      if (password !== value) {
         return 'Passwords don\'t match';
       }
     }
-  }
+  };
+
+  const fields: FormField[] = [
+    {
+      name: 'email',
+      label: 'Email:',
+      type: 'text',
+      validators: validateEmail
+    },
+    {
+      name: 'passwordOne',
+      label: 'Password:',
+      type: 'password',
+      validators: validatorsPasswordOne
+    },
+    {
+      name: 'passwordTwo',
+      label: 'Confirm password:',
+      type: 'password',
+      validators: validatorsPasswordTwo
+    }
+  ];
+
   return (
-    <div className={`${style.container} ${style.form__container}`}>
-      <div className={style.form__block}>
-          <h1 className={style.form__title}>Register</h1>
-          <form 
-            className={style.form__wrapper}
-            onSubmit={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              form.handleSubmit()
-            }}
-          >
-            <form.Field
-              name = 'username'
-              validators={validatorsUsername}
-              children = {(field) => {
-                return (
-                  <div className={style.form__item}>
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      className={style.form__input}
-                      type="text"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder=' '
-                    />
-                    <label className={style.form__label}>Username:</label>
-                    <FieldInfo field={field} />
-                  </div> 
-                  )
-                } 
-              }
-            />
-            <form.Field
-              name = 'passwordOne'
-              validators={validatorsPasswordOne}
-              children = {(field) => {
-                return (
-                  <div className={style.form__item}>
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      className={style.form__input}
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder=' '
-                    />
-                    <label className={style.form__label}>Password:</label>
-                    <FieldInfo field={field} />
-                  </div> 
-                  )
-                } 
-              }
-            />
-            <form.Field
-              name = 'passwordTwo'
-              validators={validatorsPasswordTwo}
-              children = {(field) => {
-                return (
-                  <div className={style.form__item}>
-                    <input
-                      id={field.name}
-                      name={field.name}
-                      className={style.form__input}
-                      type="password"
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                      placeholder=' '
-                    />
-                    <label className={style.form__label}>Confirm password:</label>
-                    <FieldInfo field={field} />
-                  </div> 
-                  )
-                } 
-              }
-            />
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting, state.errorMap]}
-              children={([canSubmit, isSubmitting, errorMap]) => (
-                <>
-                  <button className={style.form__sumbit} type="submit" disabled={!canSubmit}>
-                    {isSubmitting ? 'Loading...' : 'Submit'}
-                  </button>
-                  <span className={style.form__mainError}>{typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}</span>
-                </>
-              )}
-            />
-          </form>
-      </div>
-    </div>
+    <AuthContainer title="Register">
+      <AuthForm
+        fields={fields}
+        onSubmit={handleSubmit}
+        submitButtonText="Submit"
+        defaultValues={{
+          username: '',
+          passwordOne: '',
+          passwordTwo: ''
+        }}
+      />
+    </AuthContainer>
   );
 };
 

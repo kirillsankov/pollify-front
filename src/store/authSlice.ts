@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 
 interface LoginCredentials {
-  username: string;
+  email: string;
   password: string;
 }
 
 interface User {
-  username: string;
   email: string; 
 }
 
@@ -18,10 +16,26 @@ interface AuthState {
   error: string | null;
 }
 
-export const login = createAsyncThunk(`${process.env.REACT_APP_BACK_LINK}/auth/login`, async (credentials: LoginCredentials) => {
-  const response = await axios.post(`${process.env.REACT_APP_BACK_LINK}/auth/login`, credentials);
-  return response.data;
-});
+export const login = createAsyncThunk(
+  `${process.env.REACT_APP_BACK_LINK}/auth/login`, 
+  async (credentials: LoginCredentials, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACK_LINK}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(credentials),
+        credentials: 'include'
+      });
+      
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      return rejectWithValue({ message: 'Network error' });
+    }
+  }
+);
 
 const storedToken = localStorage.getItem('token');
 
