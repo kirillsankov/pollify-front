@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthForm } from '../../components/Auth/index';
-import { forgotPassword, resendCode, resetPassword } from '../../api/authApi';
+import { forgotPassword, resetPassword } from '../../api/authApi';
 import { FormField } from '../../components/Auth/AuthForm';
 import AuthContainer from './AuthContainer';
 import { SuccessMessage } from '../../components/shared/index';
@@ -189,12 +189,8 @@ const ResetPasswordPage: React.FC = () => {
                 <div>
                     <p>Didn't receive a code?</p>
                     <button className={style.link} onClick={async () => {
-                        if(!email) {
-                            navigate('/register');
-                            return 'Email is required';
-                        }
                         setResendLoad(true);
-                        await resendCode(email);
+                        await forgotPassword(email);
                         setResendLoad(false);
                     }}>{resendLoad ? 'Sending...' : 'Resend Code'}</button> 
                 </div>

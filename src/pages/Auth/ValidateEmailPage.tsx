@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { resendCode, verifyEmail } from "../../api/authApi";
+import { resendVerifyEmailCode, verifyEmail } from "../../api/authApi";
 import { AuthForm } from "../../components/Auth/index";
 import AuthContainer from "./AuthContainer";
 import { useEffect, useState } from "react";
@@ -102,7 +102,7 @@ const ValidateEmailPage= ({title}: Props) => {
                                         return 'Email is required';
                                     }
                                     setResendLoad(true);
-                                    await resendCode(email);
+                                    await resendVerifyEmailCode(email);
                                     setResendLoad(false);
                                 }}>{resendLoad ? 'Sending...' : 'Resend Code'}</button> 
                             </div>

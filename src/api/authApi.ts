@@ -64,8 +64,8 @@ export const verifyEmail = async (email: string, code: string): Promise<IRespons
   return await handleResponse(response);
 };
 
-export const resendCode = async (email: string): Promise<IResponse> => {
-  const response = await fetch(`${API_URL}/auth/resend-verification`, {
+export const resendVerifyEmailCode = async (email: string): Promise<IResponse> => {
+  const response = await fetch(`${API_URL}/auth/resend-verification-email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
