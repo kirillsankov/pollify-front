@@ -1,10 +1,11 @@
 import { User } from '../types/inerfaces';
+import { fetchWithAuth } from './apiClient';
 
 export interface IResponse {
   message: string | string[];
   error?: string;
   statusCode?: number;
-  access_token?: string;
+  token?: string;
   validate?: boolean;
 }
 
@@ -21,16 +22,11 @@ export const validateToken = async (token: string | null = null): Promise<boolea
       return false;
     }
     
-    const response = await fetch(`${API_URL}/auth/validate`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
+    // Используем fetchWithAuth вместо прямого fetch
+    const data = await fetchWithAuth(`${API_URL}/auth/validate`, {
+      method: 'GET'
     });
     
-    const data = await handleResponse(response);
     return data.validate || false;
   } catch (error) {
     console.error('Token validation failed:', error);
@@ -101,4 +97,24 @@ export const resetPassword = async (email: string, code: string, newPassword: st
   });
   
   return await handleResponse(response);
+};
+
+export const refreshToken = async (): Promise<IResponse> => {
+  try {
+    const response = await fetch(`${API_URL}/auth/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+    console.log(response);
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Token refresh failed:', error);
+    return {
+      error: 'true',
+      message: 'Failed to refresh token'
+    };
+  }
 };

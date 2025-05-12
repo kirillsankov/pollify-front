@@ -28,7 +28,7 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
                         return "You must be logged in to generate a poll" ;
                     }
                     const { topic, complexity } = value;
-                    const response = await generateAiPoll(token, { messagePrompt: topic, numberQuestion: +complexity });
+                    const response = await generateAiPoll({ messagePrompt: topic, numberQuestion: +complexity });
                     
                     response.questions.forEach((question, index) => {
                         question.errors = { text: '', options: [''] };

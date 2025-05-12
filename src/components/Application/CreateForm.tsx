@@ -28,7 +28,7 @@ const CreateForm: React.FC = () => {
         const fetchPoll = async () => {
             if (id && token) {
                 try {
-                    const poll = await getForm(id, token);
+                    const poll = await getForm(id);
                     const questions = poll.questions.map(q => ({
                         text: q.text,
                         options: q.options,
@@ -84,12 +84,12 @@ const CreateForm: React.FC = () => {
                         poll = await updatePoll(id, {
                             title,
                             questions: filteredQuestions,
-                        }, token);
+                        });
                     } else {
                         poll = await createPoll({
                             title,
                             questions: filteredQuestions,
-                        }, token);
+                        });
                     }
                     
                     navigate(`/app/stats/${poll._id}`);

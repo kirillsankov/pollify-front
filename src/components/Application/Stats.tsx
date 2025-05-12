@@ -14,7 +14,7 @@ const Stats = () => {
         if (!token) {
             return;
         }
-        getForms(token).then((res) => {
+        getForms().then((res) => {
             setForm(res);
         });
     }, [token])

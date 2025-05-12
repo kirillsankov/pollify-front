@@ -22,8 +22,8 @@ const WorkingPage = () => {
     const fetchPoll = async () => {
         if (id && token) {
             try {
-                const pollData = await getShortForms(id, token);
-                const isVotedPoll = await checkVoteForm(id, token);
+                const pollData = await getShortForms(id);
+                const isVotedPoll = await checkVoteForm(id);
                 setVoted(isVotedPoll)
                 setPoll(pollData);
             } catch (error) {
@@ -53,7 +53,7 @@ const WorkingPage = () => {
                     if(!id || !token) {
                         return "Error";
                     }
-                    await voteForm(id, answersArray, token);
+                    await voteForm(id, answersArray);
                     fetchPoll();
                     window.scrollTo(0, 0);
                 } catch (error) {

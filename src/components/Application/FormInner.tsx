@@ -23,7 +23,7 @@ const FormInner = () => {
         const fetchPoll = async () => {
             if (id && token) {
                 try {
-                    const poll = await getForm(id, token);
+                    const poll = await getForm(id);
                     setPoll(poll);
                     setQuestions(poll.questions);
                 } catch (error) {
@@ -37,7 +37,7 @@ const FormInner = () => {
 
     const deleteForm = async () => {
         if(id && token) {
-            await deletePoll(id, token);
+            await deletePoll(id);
             navigate('/app/stats');
         }
     }
