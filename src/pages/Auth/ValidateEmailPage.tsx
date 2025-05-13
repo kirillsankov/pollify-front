@@ -54,7 +54,6 @@ const ValidateEmailPage= ({title}: Props) => {
             return errorMessage;
         }
         
-        // Вместо прямого перенаправления показываем страницу успеха
         setCurrentStep(VerificationStep.SUCCESS);
         return null;
     };    

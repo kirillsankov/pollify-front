@@ -22,7 +22,6 @@ export const validateToken = async (token: string | null = null): Promise<boolea
       return false;
     }
     
-    // Используем fetchWithAuth вместо прямого fetch
     const data = await fetchWithAuth(`${API_URL}/auth/validate`, {
       method: 'GET'
     });

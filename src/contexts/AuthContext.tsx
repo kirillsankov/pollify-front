@@ -1,8 +1,7 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RootState } from '../store/store';
-import { validateToken } from '../api/authApi';
 import { logout } from '../store/authSlice';
 
 interface AuthContextType {
@@ -11,7 +10,7 @@ interface AuthContextType {
   user: any;
   status: string;
   isLoading: boolean;
-  validateCurrentToken: () => Promise<boolean>;
+  setAuthenticated: (value: boolean) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
@@ -20,7 +19,7 @@ export const AuthContext = createContext<AuthContextType>({
   user: null,
   status: 'idle',
   isLoading: false,
-  validateCurrentToken: async () => false
+  setAuthenticated: () => {}
 });
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
@@ -32,33 +31,18 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  let validationInProgress = false;
   
-  const validateCurrentToken = async (): Promise<boolean> => {
-    if (!token) {
-      localStorage.setItem('isAuthLast', 'false');
-      setAuth(false);   
-      return false;
-    }
-    
-    if (validationInProgress) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      return auth;
-    }
-    
-    try {
-      validationInProgress = true;
-      const isAuth = await validateToken(token);
-      localStorage.setItem('isAuthLast', isAuth.toString());
-      setAuth(isAuth);
-      return isAuth;
-    } finally {
-      validationInProgress = false;
-    }
+  const setAuthenticated = (value: boolean) => {
+    localStorage.setItem('isAuthLast', value.toString());
+    setAuth(value);
   };
   
   useEffect(() => {
-    validateCurrentToken();
+    if (!token) {
+      setAuthenticated(false);
+    } else {
+      setAuthenticated(true);
+    }
   }, [token, location.pathname]);
   
 
@@ -75,7 +59,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
     user,
     status,
     isLoading: status === 'loading',
-    validateCurrentToken
+    setAuthenticated
   };
 
   return (
