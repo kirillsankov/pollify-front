@@ -3,7 +3,7 @@ import style from '../../styles/Error/index.module.scss';
 
 export default function NotFound() {
     useEffect(() => {
-        document.title = '404 - Страница не найдена';
+        document.title = '404 - Page Not Found';
         
         let metaRobots = document.createElement('meta');
         metaRobots.name = 'robots';
