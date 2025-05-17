@@ -66,7 +66,6 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}): Pro
 
       try {
         const refreshResponse = await refreshToken();
-        console.log(refreshResponse.token);
 
         if (refreshResponse.error || !refreshResponse.token) {
           refreshQueue = [];

@@ -107,7 +107,6 @@ export const refreshToken = async (): Promise<IResponse> => {
       },
       credentials: 'include'
     });
-    console.log(response);
     return await handleResponse(response);
   } catch (error) {
     console.error('Token refresh failed:', error);

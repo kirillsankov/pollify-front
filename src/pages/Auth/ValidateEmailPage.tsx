@@ -29,7 +29,6 @@ const ValidateEmailPage= ({title}: Props) => {
             navigate('/register');
         }
         setEmail(currentEmail);
-        console.log(currentEmail);
     }, [])
     
     const handleSubmit = async (values: any) => {
@@ -39,7 +38,6 @@ const ValidateEmailPage= ({title}: Props) => {
             return 'Email is required';
         }
         const messageData = await verifyEmail(email, code);
-        console.log(messageData);
     
         if(messageData.error) {
             const errorMessage = Array.isArray(messageData.message) ? messageData.message[0] : messageData.message;

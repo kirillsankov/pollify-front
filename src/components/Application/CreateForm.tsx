@@ -57,6 +57,13 @@ const CreateForm: React.FC = () => {
         setFormValid(isValid);
     }, [questions]);
 
+    useEffect(() => {
+        if(!title) {
+            return;
+        }
+        form.setFieldValue('title', title);
+    }, [title]);
+
     const form = useForm({
         defaultValues: {
             title: title || poll?.title || '',
@@ -315,7 +322,9 @@ const CreateForm: React.FC = () => {
                                             className={style.formCreate__removeOptionBtn}
                                             onClick={() => removeOption(questionIndex, optionIndex)}
                                         >
-                                            ×
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M20 20L4 4m16 0L4 20"></path>
+                                            </svg>
                                         </button>
                                     )}
                                     
