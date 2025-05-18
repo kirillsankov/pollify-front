@@ -1,4 +1,4 @@
-import { Poll, PollGenerator, PollShort } from '../types/inerfaces';
+import { ApiError, Poll, PollGenerator, PollShort } from '../types/inerfaces';
 import { fetchWithAuth } from './apiClient';
 
 interface CreatePollData {
@@ -11,32 +11,32 @@ interface CreatePollData {
 
 const API_URL = process.env.REACT_APP_BACK_LINK;
 
-export const getForms = async (): Promise<Poll[]> => {
+export const getForms = async (): Promise<Poll[] | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls`, {
     method: 'GET'
   });
 };
 
-export const getShortForms = async (id: string): Promise<PollShort> => {
+export const getShortForms = async (id: string): Promise<PollShort | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/short/${id}`, {
     method: 'GET'
   });
 };
 
-export const getForm = async (id: string): Promise<Poll> => {
+export const getForm = async (id: string): Promise<Poll | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/${id}`, {
     method: 'GET'
   });
 };
 
-export const voteForm = async (id: string, answersArray: string[]): Promise<Poll> => {
+export const voteForm = async (id: string, answersArray: string[]): Promise<Poll | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/${id}/vote`, {
     method: 'POST',
     body: JSON.stringify({ questions: answersArray })
   });
 };
 
-export const checkVoteForm = async (id: string): Promise<{ isVoted: boolean; userId: string }> => {
+export const checkVoteForm = async (id: string): Promise<{ isVoted: boolean; userId: string } | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/${id}/check-vote`, {
     method: 'GET'
   });

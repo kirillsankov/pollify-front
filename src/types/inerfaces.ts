@@ -33,3 +33,10 @@ export interface Poll {
     options: string[], 
     errors: { text: string, options: string[] }
   }
+
+
+  export interface ApiError {
+    message: string;
+    error: string;
+    statusCode: number;
+  }

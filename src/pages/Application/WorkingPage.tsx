@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import { checkVoteForm, getForm, getShortForms, voteForm } from "../../api/formsAPI";
-import { Poll, PollShort, Question } from "../../types/inerfaces";
+import { ApiError, Poll, PollShort, Question } from "../../types/inerfaces";
 import { Loader } from "../../components/shared/index";
 import { useAuth } from "../../hooks/useAuth";
 import { useForm } from "@tanstack/react-form";
@@ -24,11 +24,17 @@ const WorkingPage = () => {
             try {
                 const pollData = await getShortForms(id);
                 const isVotedPoll = await checkVoteForm(id);
-                setVoted(isVotedPoll)
-                setPoll(pollData);
+                if (!('error' in pollData) && !('error' in isVotedPoll)) {
+                    setVoted(isVotedPoll);
+                    setPoll(pollData);
+                }
             } catch (error) {
-                setError("Failed to load poll data");
-                console.error(error);
+                const apiError = error as ApiError;
+                if (apiError) {
+                    setError(apiError.message);
+                } else {
+                    setError('An unknown error occurred');
+                }
             } finally {
                 setLoading(false);
             }

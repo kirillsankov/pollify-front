@@ -5,7 +5,7 @@ import { deletePoll, getForm } from "../../api/formsAPI";
 import { Poll, Question } from "../../types/inerfaces";
 import style from '../../styles/Application/index.module.scss';
 
-import { AxiosError } from "axios";
+import { ApiError } from "../../types/inerfaces";
 import { Loader, ButtonWithIcon } from "../shared/index";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -24,10 +24,19 @@ const FormInner = () => {
             if (id && token) {
                 try {
                     const poll = await getForm(id);
-                    setPoll(poll);
-                    setQuestions(poll.questions);
-                } catch (error) {
-                    setError(error instanceof AxiosError && error.response ? error.response.data.message : 'An unknown error occurred');
+                    console.log(poll);
+                    if (!('error' in poll)) {
+                        setPoll(poll);
+                        setQuestions(poll.questions);
+                    }
+                } catch (err) {
+                    const apiError = err as ApiError;
+                    if (apiError) {
+                        setError(apiError.message);
+                        // console.error(`Error: ${apiError.error}, Code: ${apiError.statusCode}`);
+                    } else {
+                        setError('An unknown error occurred');
+                    }
                 }
             }
         };

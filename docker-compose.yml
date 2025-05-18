@@ -7,6 +7,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
-    environment:
-      - REACT_APP_BACK_LINK=http://host.docker.internal:3000
+    volumes:
+      - ./.env:/app/.env
     restart: unless-stopped

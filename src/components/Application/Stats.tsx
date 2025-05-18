@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getForms } from "../../api/formsAPI";
-import { Poll } from "../../types/inerfaces";
+import { ApiError, Poll } from "../../types/inerfaces";
 import style from '../../styles/Application/index.module.scss';
 
 import { Link } from "react-router-dom";
@@ -8,6 +8,7 @@ import { useAuth } from "../../hooks/useAuth";
 
 const Stats = () => {
     const [form, setForm] = useState<Poll[]>([]);
+    const [error, setError] = useState<string | null>(null);
     const { token } = useAuth();
 
     useEffect(() => {
@@ -15,11 +16,23 @@ const Stats = () => {
             return;
         }
         getForms().then((res) => {
-            setForm(res);
+            if (!('error' in res)) {
+                setForm(res);
+            }
+        }).catch((err) => {
+            const apiError = err as ApiError;
+            if (apiError) {
+                setError(apiError.message);
+            } else {
+                setError('An unknown error occurred');
+            }
         });
     }, [token])
 
 
+    if(error) {
+        return <div className={style.formInner__error}>Error: {error}</div>;
+    }
     return (
         <>
             <h1 className={style.stat__h1}>

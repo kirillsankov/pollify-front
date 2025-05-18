@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { RootState } from '../store/store';
+import { AppDispatch, RootState } from '../store/store';
 import { logout } from '../store/authSlice';
 
 interface AuthContextType {
@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   const status = useSelector((state: RootState) => state.auth.status);
   const location = useLocation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   
   const setAuthenticated = (value: boolean) => {
     localStorage.setItem('isAuthLast', value.toString());
@@ -47,10 +47,12 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
   
 
   useEffect(() => {
-    if(!localStorage.getItem('token') && token) {
-      dispatch(logout());
-      navigate('/login');
-    }
+    (async () => {
+        if(!localStorage.getItem('token') && token) {
+          await dispatch(logout());
+          navigate('/login');
+        }  
+      })();
   }, [localStorage.getItem('token')]);
   
   const authValue = {

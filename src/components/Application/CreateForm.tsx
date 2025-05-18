@@ -5,7 +5,7 @@ import { useForm } from '@tanstack/react-form';
 import { FieldInfo, ButtonWithIcon } from '../shared/index';
 import React, { useState, useEffect } from 'react';
 import { createPoll, getForm, updatePoll } from '../../api/formsAPI';
-import { Poll, QuestionGenerator } from '../../types/inerfaces';
+import { ApiError, Poll, QuestionGenerator } from '../../types/inerfaces';
 import { useAuth } from '../../hooks/useAuth';
 import { AxiosError } from 'axios';
 import GenerateForm from './GenerateForm';
@@ -29,19 +29,27 @@ const CreateForm: React.FC = () => {
             if (id && token) {
                 try {
                     const poll = await getForm(id);
-                    const questions = poll.questions.map(q => ({
-                        text: q.text,
-                        options: q.options,
-                        errors: { text: '', options: q.options.map(() => '') }
-                    }));
-                    setPoll(poll);
-                    setQuestions(questions); 
-                } catch (error) {
-                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
-                        setError(error.response.data.message);
-                        return;
+                    if (!('error' in poll)) {
+                        const questions = poll.questions.map(q => ({
+                            text: q.text,
+                            options: q.options,
+                            errors: { text: '', options: q.options.map(() => '') }
+                        }));
+                        setPoll(poll);
+                        setQuestions(questions); 
                     }
-                    setError('Failed to create poll');
+                } catch (error) {
+                    const apiError = error as ApiError;
+                    if (apiError) {
+                        setError(apiError.message);
+                    } else {
+                        setError('An unknown error occurred');
+                    }
+                    // if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
+                    //     setError(error.response.data.message);
+                    //     return;
+                    // }
+                    // setError('Failed to create poll');
                 }
             }
         };
