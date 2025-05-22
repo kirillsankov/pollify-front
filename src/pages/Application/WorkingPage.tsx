@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AxiosError } from "axios";
-import { checkVoteForm, getForm, getShortForms, voteForm } from "../../api/formsAPI";
-import { ApiError, Poll, PollShort, Question } from "../../types/inerfaces";
+import { checkVoteForm, getShortForms, voteForm } from "../../api/formsAPI";
+import { ApiError, PollShort, Question } from "../../types/inerfaces";
 import { Loader } from "../../components/shared/index";
 import { useAuth } from "../../hooks/useAuth";
 import { useForm } from "@tanstack/react-form";
@@ -63,12 +62,13 @@ const WorkingPage = () => {
                     fetchPoll();
                     window.scrollTo(0, 0);
                 } catch (error) {
-                    console.log(error);
-                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
-                        return error.response.data.message;
+                    const apiError = error as ApiError;
+                    if (apiError) {
+                        return apiError.message;
+                    } else {
+                        return "Failed to submit your vote. Please try again.";
                     }
-                    console.error("Error submitting vote:", error);
-                    return "Failed to submit your vote. Please try again.";
+                    // return "Failed to submit your vote. Please try again.";
                 }
             },
         }

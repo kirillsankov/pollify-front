@@ -7,7 +7,6 @@ import React, { useState, useEffect } from 'react';
 import { createPoll, getForm, updatePoll } from '../../api/formsAPI';
 import { ApiError, Poll, QuestionGenerator } from '../../types/inerfaces';
 import { useAuth } from '../../hooks/useAuth';
-import { AxiosError } from 'axios';
 import GenerateForm from './GenerateForm';
 
 const CreateForm: React.FC = () => {
@@ -95,6 +94,7 @@ const CreateForm: React.FC = () => {
                         return 'At least one question with one option is required';
                     }
                     let poll = null
+
                     if(id) {
                         poll = await updatePoll(id, {
                             title,
@@ -106,15 +106,17 @@ const CreateForm: React.FC = () => {
                             questions: filteredQuestions,
                         });
                     }
-                    
-                    navigate(`/app/stats/${poll._id}`);
+                    if (!('error' in poll)) {
+                        navigate(`/app/stats/${poll._id}`);
+                    }
                     return null;
                 } catch (error) {
-                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
-                        return error.response.data.message;
+                    const apiError = error as ApiError;
+                    if (apiError) {
+                        setError(apiError.message);
+                    } else {
+                        setError('An unknown error occurred');
                     }
-                    console.error('Error creating poll:', error);
-                    return 'Failed to create poll';
                 }
             },
         }

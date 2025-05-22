@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ApiError } from '../types/inerfaces';
 
 interface LoginCredentials {
   email: string;
@@ -18,9 +19,9 @@ interface AuthState {
 
 export const login = createAsyncThunk(
   `${process.env.REACT_APP_BACK_LINK}/auth/login`, 
-  async (credentials: LoginCredentials, { rejectWithValue }) => {
+  async (credentials: LoginCredentials) => {
     try {
-      console.log(process.env.REACT_APP_BACK_LINK);
+      // console.log(process.env.REACT_APP_BACK_LINK);
       const response = await fetch(`${process.env.REACT_APP_BACK_LINK}/auth/login`, {
         method: 'POST',
         headers: {
@@ -29,15 +30,21 @@ export const login = createAsyncThunk(
         body: JSON.stringify(credentials),
         credentials: 'include'
       });
-      
       const data = await response.json();
+      if(!response.ok) {
+        throw data;
+      }
       return data;
     } catch (error) {
-      return rejectWithValue({ message: 'Network error' });
+      const apiError = error as ApiError;
+      // console.log(apiError);
+      if (apiError) {
+          throw apiError;
+      } 
     }
   }
 );
-export const logout = createAsyncThunk(`${process.env.REACT_APP_BACK_LINK}/auth/logout`, async (_, { rejectWithValue }) => {
+export const logout = createAsyncThunk(`${process.env.REACT_APP_BACK_LINK}/auth/logout`, async () => {
   try {
     const response = await fetch(`${process.env.REACT_APP_BACK_LINK}/auth/logout`, {
       method: 'POST',
@@ -47,9 +54,16 @@ export const logout = createAsyncThunk(`${process.env.REACT_APP_BACK_LINK}/auth/
       credentials: 'include'
     });
     const data = await response.json();
+    if(!response.ok) {
+      throw data;
+    }
     return data;
   } catch (error) {
-    return rejectWithValue({ message: 'Network error' });
+    const apiError = error as ApiError;
+    if (apiError) {
+        throw apiError;
+    } 
+    // throw 'An unknown error occurred';
   }
 });
 
@@ -87,6 +101,7 @@ const authSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(login.fulfilled, (state, action) => {
+        // console.log('succeeded');
         state.status = 'succeeded';
         state.token = action.payload.token;
         localStorage.setItem('token', action.payload.token);

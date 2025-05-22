@@ -7,32 +7,21 @@ import { FormField } from '../../components/Auth/AuthForm';
 import style from '../../styles/Application/index.module.scss';
 import { AuthForm } from '../../components/Auth/index';
 import AuthContainer from './AuthContainer';
+import { ApiError } from '../../types/inerfaces';
 
 interface Props {
   callBackSuccess?: () => void;
 }
 
 const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
-  const [forgotPassword, setForgotPassword] = React.useState(false);
+  const [, setForgotPassword] = React.useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const handleSubmit = async (values: {email: string, password: string}) => {
     const { email, password } = values;
     try {
-      const result = (await dispatch(login({ email, password })).unwrap()) ;
-      
-      if(result.error) {
-        const error = Array.isArray(result.message) ? result.message[0] : result.message;
-        if(error === 'Email not verified. Please verify your email first.') {
-          navigate(`/verify?email=${encodeURIComponent(email)}`);
-          return error;
-        }
-        if(error === 'Invalid credentials') {
-          setForgotPassword(true);
-        }
-        return error;
-      }
+      (await dispatch(login({ email, password })).unwrap()) ;
       
       if (callBackSuccess) {
         callBackSuccess();
@@ -41,8 +30,12 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
       }
       return null;
     } catch (error) {
-      console.log('Unexpected error:', error);
-      return 'An unexpected error occurred';
+      const apiError = error as ApiError;
+      if (apiError) {
+          return apiError.message;
+      } else {
+          return 'An unknown error occurred';
+      }
     }
   };
 

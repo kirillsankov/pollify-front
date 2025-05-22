@@ -42,27 +42,27 @@ export const checkVoteForm = async (id: string): Promise<{ isVoted: boolean; use
   });
 };
 
-export const createPoll = async (pollData: CreatePollData): Promise<Poll> => {
+export const createPoll = async (pollData: CreatePollData): Promise<Poll | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls`, {
     method: 'POST',
     body: JSON.stringify(pollData)
   });
 };
 
-export const updatePoll = async (id: string, pollData: CreatePollData): Promise<Poll> => {
+export const updatePoll = async (id: string, pollData: CreatePollData): Promise<Poll | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/${id}/update`, {
     method: 'PUT',
     body: JSON.stringify(pollData)
   });
 };
 
-export const deletePoll = async (id: string): Promise<Poll> => {
+export const deletePoll = async (id: string): Promise<Poll | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/${id}`, {
     method: 'DELETE'
   });
 };
 
-export const generateAiPoll = async (data: {messagePrompt: string, numberQuestion: number}): Promise<PollGenerator> => {
+export const generateAiPoll = async (data: {messagePrompt: string, numberQuestion: number}): Promise<PollGenerator | ApiError> => {
   return fetchWithAuth(`${API_URL}/polls/generate`, {
     method: 'POST',
     body: JSON.stringify(data)

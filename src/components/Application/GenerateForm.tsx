@@ -4,8 +4,7 @@ import { useForm } from "@tanstack/react-form";
 import formStyle from '../../styles/Application/index.module.scss';
 import { generateAiPoll } from "../../api/formsAPI";
 import { useAuth } from "../../hooks/useAuth";
-import { PollGenerator } from "../../types/inerfaces";
-import { AxiosError } from "axios";
+import { ApiError, PollGenerator } from "../../types/inerfaces";
 
 interface IProps {
     popupState: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
@@ -29,18 +28,20 @@ export const GenerateForm = ({popupState, onGenerate}: IProps) => {
                     }
                     const { topic, complexity } = value;
                     const response = await generateAiPoll({ messagePrompt: topic, numberQuestion: +complexity });
-                    
-                    response.questions.forEach((question, index) => {
-                        question.errors = { text: '', options: [''] };
-                    });
-                    setPopup(false);
-                    onGenerate(response);
-                    
-                } catch (error) {
-                    if(error instanceof AxiosError && error?.response && error?.response?.data?.message) {
-                        return error.response.data.message;
+                    if (!('error' in response)) {
+                        response.questions.forEach((question, index) => {
+                            question.errors = { text: '', options: [''] };
+                        });
+                        setPopup(false);
+                        onGenerate(response);
                     }
-                    return "Failed to generate poll. Please try again.";
+                } catch (error) {
+                    const apiError = error as ApiError;
+                    if (apiError) {
+                        return apiError.message;
+                    } else {
+                        return 'An unknown error occurred';
+                    }
                 }
             } 
         }
