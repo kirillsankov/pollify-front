@@ -18,7 +18,8 @@ enum ResetStep {
 const ResetPasswordPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<ResetStep>(ResetStep.EMAIL);
   const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [password, setPassword] = useState<string>(''); // Stores the value of 'newPassword' field
+  const [confirmPassword, setConfirmPassword] = useState<string>(''); // Stores the value of 'confirmPassword' field
   const [resendLoad, setResendLoad] = useState<boolean>(false);
 
   const navigate = useNavigate();
@@ -54,7 +55,11 @@ const ResetPasswordPage: React.FC = () => {
 
   const handlePasswordSubmit = async (values: any) => {
     try {
-      const { code, newPassword } = values;
+      const { code, newPassword, confirmPassword } = values;
+
+      if (newPassword !== confirmPassword) {
+        return "Passwords don't match";
+      }
       
       const response = await resetPassword(email, code, newPassword);
       
@@ -98,33 +103,29 @@ const ResetPasswordPage: React.FC = () => {
   };
 
   const validatePassword = {
-    onChange: ({ value }: { value: string }) => {
-      setPassword(value);
-      if (!value) {
-        return 'Password is required';
-      }
-      if (value.length < 8) {
-        return 'Password must be at least 8 characters';
-      }
-      if (value.length > 30) {
-        return 'Password must be less than 30 characters';
-      }
+    onChange: ({ value }: { value: string }) => { // value is from 'newPassword' field
+      setPassword(value); // Update state for 'newPassword'
       
+      // Standard validations for 'newPassword'
+      if (!value) return 'Password is required';
+      if (value.length < 8) return 'Password must be at least 8 characters';
+      if (value.length > 30) return 'Password must be less than 30 characters';
       const passwordRegex = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
       if (!passwordRegex.test(value)) {
         return 'Password must contain at least one uppercase letter, one lowercase letter, and one number or special character';
       }
+      
+      return null; // All good
     }
   };
 
   const validateConfirmPassword = {
-    onChange: ({ value }: { value: string }) => {
-      if (!value) {
-        return 'Confirm password is required';
-      }
-      if (password !== value) {
-        return 'Passwords don\'t match';
-      }
+    onChange: ({ value }: { value: string }) => { // value is from 'confirmPassword' field
+      setConfirmPassword(value); // Update state for 'confirmPassword'
+      
+      if (!value) return 'Confirm password is required';
+      
+      return null; // All good
     }
   };
 

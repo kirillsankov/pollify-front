@@ -11,7 +11,12 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState<string>('');
 
   const handleSubmit = async (values: any) => {
-    const { email, passwordOne: password } = values;
+    const { email, passwordOne: password, passwordTwo: confirmPassword } = values;
+
+    if (password !== confirmPassword) {
+      return "Passwords don't match";
+    }
+
     const registerResponse = await register({ email, password });
     if(registerResponse.error) {
       return Array.isArray(registerResponse.message) ? registerResponse.message[0] : registerResponse.message;
@@ -59,9 +64,7 @@ const RegisterPage: React.FC = () => {
       if (!value) {
         return 'Confirm password is required';
       }
-      if (password !== value) {
-        return 'Passwords don\'t match';
-      }
+      return null; // All good. Password matching will be handled at form submission.
     }
   };
 
