@@ -64,7 +64,7 @@ const RegisterPage: React.FC = () => {
       if (!value) {
         return 'Confirm password is required';
       }
-      return null; // All good. Password matching will be handled at form submission.
+      return null;
     }
   };
 

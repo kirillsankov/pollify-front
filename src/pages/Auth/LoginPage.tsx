@@ -76,7 +76,6 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
     }
   ];
 
-  // Update the footer content to include a forgot password link
   const footerContent = (
     <div className={style.form__registerLink}>
       <div>Don't have an account? <Link className={style.link} to="/register">Register here</Link></div>
