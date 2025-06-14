@@ -1,4 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import { resendVerifyEmailCode, verifyEmail } from "../../api/authApi";
 import { AuthForm } from "../../components/Auth/index";
 import AuthContainer from "./AuthContainer";
@@ -123,9 +124,15 @@ const ValidateEmailPage= ({title}: Props) => {
     };
     
     return (
-        <AuthContainer title={currentStep === VerificationStep.SUCCESS ? "Email Verification" : title}>
-            {renderContent()}
-        </AuthContainer>
+        <>
+            <Helmet>
+                <title>{currentStep === VerificationStep.SUCCESS ? "Email Verification" : title} - Pollify</title>
+                <meta name="description" content="Verify your email address to complete your Pollify account registration" />
+            </Helmet>
+            <AuthContainer title={currentStep === VerificationStep.SUCCESS ? "Email Verification" : title}>
+                {renderContent()}
+            </AuthContainer>
+        </>
     );
 }
 

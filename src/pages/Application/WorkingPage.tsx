@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useForm } from "@tanstack/react-form";
 import { FieldInfo } from "../../components/shared/index";
 import style from '../../styles/Application/index.module.scss';
+import { Helmet } from "react-helmet-async";
 
 
 
@@ -95,7 +96,12 @@ const WorkingPage = () => {
 
     if(voted?.isVoted) {
         return (
-            <div className={`${style.container}  ${style.formShown} ${style.formInner__pollStat}`}>
+            <>
+                <Helmet>
+                    <title>{poll?.title ? `${poll.title} - Results` : 'Poll Results'} - Pollify</title>
+                    <meta name="description" content={`View your results for the poll: ${poll?.title || 'Poll'}. See your submitted answers and responses.`} />
+                </Helmet>
+                <div className={`${style.container}  ${style.formShown} ${style.formInner__pollStat}`}>
                 <h1 className={`${style.formInner__title} ${style.formShown__title} ${style.formShown__title__success}`}>
                 You have successfully completed the "{poll?.title}" survey, below are your results</h1>
                 <div className={style.formShown__item}>
@@ -118,20 +124,32 @@ const WorkingPage = () => {
                         )
                     })}
                 </div>
-             </div>
+                </div>
+            </>
         )
     }
 
     if (error || !poll) {
         return (
-            <div className={`${style.container}  ${style.formShown}`}>
-                <div className={style.formInner__error}>Error: {error || "Poll not found"}</div>
-             </div>
+            <>
+                <Helmet>
+                    <title>Poll Error - Pollify</title>
+                    <meta name="description" content="An error occurred while loading the poll. Please try again or contact support." />
+                </Helmet>
+                <div className={`${style.container}  ${style.formShown}`}>
+                    <div className={style.formInner__error}>Error: {error || "Poll not found"}</div>
+                </div>
+            </>
         )
     }
 
     return (
-        <div className={`${style.formInner} ${style.container} ${style.formShown}`}>
+        <>
+            <Helmet>
+                <title>{poll.title} - Pollify</title>
+                <meta name="description" content={`Participate in the poll: ${poll.title}. Share your opinion and contribute to the survey.`} />
+            </Helmet>
+            <div className={`${style.formInner} ${style.container} ${style.formShown}`}>
             <div className={style.formInner__pollStat}>
                 <h1 className={`${style.formInner__title} ${style.formShown__title}`}>{poll.title}</h1>
                 
@@ -204,7 +222,8 @@ const WorkingPage = () => {
                     </form.Subscribe>
                 </form>
             </div>
-        </div>
+            </div>
+        </>
     );
 };
 

@@ -1,28 +1,16 @@
-import { useEffect } from 'react';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import style from '../../styles/Error/index.module.scss';
 
 export default function NotFound() {
-    useEffect(() => {
-        document.title = '404 - Page Not Found';
-        
-        let metaRobots = document.createElement('meta');
-        metaRobots.name = 'robots';
-        metaRobots.content = 'noindex';
-        document.head.appendChild(metaRobots);
-        
-        let metaStatus = document.createElement('meta');
-        metaStatus.name = 'status';
-        metaStatus.content = '404';
-        document.head.appendChild(metaStatus);
-        
-        return () => {
-          document.head.removeChild(metaRobots);
-          document.head.removeChild(metaStatus);
-        };
-      }, []);
     
   return (
     <>
+        <Helmet>
+            <title>404 - Page Not Found - Pollify</title>
+            <meta name="description" content="The page you are looking for could not be found. Return to Pollify homepage or try a different URL." />
+            <meta name="robots" content="noindex" />
+        </Helmet>
         <div className={`${style.container} ${style.errorPage}`}>
             <h1 className={style.errorPage__title}>404</h1>
             <p className={style.errorPage__description}>Page not found</p>

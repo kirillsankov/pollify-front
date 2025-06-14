@@ -1,3 +1,5 @@
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Button } from '../../components/shared/index';
 import { Feature } from '../../components/Feature/index';
 import aiPhoto from '../../assets/images/ai.webp';
@@ -7,7 +9,12 @@ import styles from '../../styles/Home/index.module.scss';
 
 export function Home() {
     return (
-        <div className={styles.home}>
+        <>
+            <Helmet>
+                <title>Pollify - Create and Share Polls with Ease</title>
+                <meta name="description" content="Create engaging polls, gather opinions, and make data-driven decisions with Pollify. Perfect for businesses, educators, and event planners." />
+            </Helmet>
+            <div className={styles.home}>
             <section className={styles.hero}>
                 <div className={`${styles.hero__container} ${styles.container}`}>
                     <h1 className={styles.hero__title}>Create and Share Polls with Ease</h1>
@@ -62,6 +69,7 @@ export function Home() {
                     <Button href="/register" className={styles.cta__button}>Create Your First Poll</Button>
                 </div>
             </section>
-        </div>
+            </div>
+        </>
     );
 }

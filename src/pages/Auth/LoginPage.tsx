@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
@@ -84,8 +85,13 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
   );
 
   return (
-    <AuthContainer title="Login">
-      <AuthForm
+    <>
+      <Helmet>
+        <title>Login - Pollify</title>
+        <meta name="description" content="Login to your Pollify account to create and manage polls" />
+      </Helmet>
+      <AuthContainer title="Login">
+        <AuthForm
         fields={fields}
         onSubmit={handleSubmit}
         submitButtonText="Login"
@@ -95,7 +101,8 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
         }} 
         footerContent={footerContent}
       />
-    </AuthContainer>
+      </AuthContainer>
+    </>
   );
 };
 

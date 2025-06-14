@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getForms } from "../../api/formsAPI";
 import { ApiError, Poll } from "../../types/inerfaces";
 import style from '../../styles/Application/index.module.scss';
+import { Loader } from "../shared/index";
 
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
@@ -9,10 +10,12 @@ import { useAuth } from "../../hooks/useAuth";
 const Stats = () => {
     const [form, setForm] = useState<Poll[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
     const { token } = useAuth();
 
     useEffect(() => {
         if (!token) {
+            setLoading(false);
             return;
         }
         getForms().then((res) => {
@@ -26,9 +29,15 @@ const Stats = () => {
             } else {
                 setError('An unknown error occurred');
             }
+        }).finally(() => {
+            setLoading(false);
         });
     }, [token])
 
+
+    if (loading) {
+        return <Loader />;
+    }
 
     if(error) {
         return <div className={style.formInner__error}>Error: {error}</div>;

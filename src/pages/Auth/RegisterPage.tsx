@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../api/authApi';
 import AuthContainer from './AuthContainer';
@@ -90,8 +91,13 @@ const RegisterPage: React.FC = () => {
   ];
 
   return (
-    <AuthContainer title="Register">
-      <AuthForm
+    <>
+      <Helmet>
+        <title>Register - Pollify</title>
+        <meta name="description" content="Create a new Pollify account to start creating and sharing polls" />
+      </Helmet>
+      <AuthContainer title="Register">
+        <AuthForm
         fields={fields}
         onSubmit={handleSubmit}
         submitButtonText="Submit"
@@ -101,7 +107,8 @@ const RegisterPage: React.FC = () => {
           passwordTwo: ''
         }}
       />
-    </AuthContainer>
+      </AuthContainer>
+    </>
   );
 };
 

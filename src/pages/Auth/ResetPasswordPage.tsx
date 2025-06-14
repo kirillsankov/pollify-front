@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { AuthForm } from '../../components/Auth/index';
 import { forgotPassword, resetPassword } from '../../api/authApi';
@@ -240,9 +241,15 @@ const ResetPasswordPage: React.FC = () => {
   };
 
   return (
-    <AuthContainer title={getStepTitle()}>
-      {renderStepContent()}
-    </AuthContainer>
+    <>
+      <Helmet>
+        <title>{getStepTitle()} - Pollify</title>
+        <meta name="description" content="Reset your Pollify account password securely" />
+      </Helmet>
+      <AuthContainer title={getStepTitle()}>
+        {renderStepContent()}
+      </AuthContainer>
+    </>
   );
 };
 
