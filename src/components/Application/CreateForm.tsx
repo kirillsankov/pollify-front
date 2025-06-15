@@ -321,7 +321,7 @@ const CreateForm: React.FC = () => {
                                     :
                                     id ? 'Update Poll' : 'Create Poll'}
                             </button>
-                            <span className={style.form__mainError}>
+                            <span className={`${style.form__mainError} ${style.form__mainError__center}`}>
                                 {typeof errorMap === 'object' && 'onSubmit' in errorMap ? errorMap.onSubmit : null}
                             </span>
                         </>
