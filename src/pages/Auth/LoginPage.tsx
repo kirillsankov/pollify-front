@@ -39,6 +39,12 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
     } catch (error) {
       const apiError = error as ApiError;
       if (apiError) {
+          if (apiError.message && (apiError.message.includes('not verified') || apiError.message.includes('Email not verified') || apiError.message.includes('Please verify your email'))) {
+            const queryParams = new URLSearchParams();
+            queryParams.set('email', email);
+            navigate(`/verify?${queryParams.toString()}`);
+            return null;
+          }
           return apiError.message;
       } else {
           return 'An unknown error occurred';

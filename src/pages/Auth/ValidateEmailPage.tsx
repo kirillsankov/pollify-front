@@ -1,9 +1,9 @@
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { Helmet } from 'react-helmet-async';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { resendVerifyEmailCode, verifyEmail } from "../../api/authApi";
 import { AuthForm } from "../../components/Auth/index";
 import AuthContainer from "./AuthContainer";
-import { useEffect, useState } from "react";
 import { FormField } from "../../components/Auth/AuthForm";
 import style from '../../styles/Application/index.module.scss';
 import { SuccessMessage } from "../../components/shared/index";
