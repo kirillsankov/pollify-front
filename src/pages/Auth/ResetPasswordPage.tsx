@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthForm } from '../../components/Auth/index';
 import { forgotPassword, resetPassword } from '../../api/authApi';
 import { FormField } from '../../components/Auth/AuthForm';
@@ -24,6 +24,7 @@ const ResetPasswordPage: React.FC = () => {
   const [resendLoad, setResendLoad] = useState<boolean>(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleEmailSubmit = async (values: any) => {
     try {
@@ -214,7 +215,7 @@ const ResetPasswordPage: React.FC = () => {
       case ResetStep.SUCCESS:
         return <SuccessMessage 
             onClick={() => {
-              navigate('/login');
+              navigate(`/login${location.search}`);
             }} 
             title='Password Reset Successful' 
             description='Your password has been successfully reset. You can now log in with your new password.' 

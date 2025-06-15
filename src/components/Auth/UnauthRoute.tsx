@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
 interface UnauthRouteProps {
@@ -8,6 +8,16 @@ interface UnauthRouteProps {
 
 export const UnauthRoute = ({ children }: UnauthRouteProps) => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
   
-  return !isAuthenticated ? <>{children}</> : <Navigate to="/app/stats" replace />;
+  if (!isAuthenticated) {
+    return <>{children}</>;
+  }
+  
+  const queryParams = new URLSearchParams(location.search);
+  const redirectTo = queryParams.get('redirect_to');
+  
+  const redirectPath = redirectTo || '/app/stats';
+  
+  return <Navigate to={redirectPath} replace />;
 };

@@ -1,4 +1,4 @@
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { resendVerifyEmailCode, verifyEmail } from "../../api/authApi";
 import { AuthForm } from "../../components/Auth/index";
@@ -23,6 +23,7 @@ const ValidateEmailPage= ({title}: Props) => {
     const [currentStep, setCurrentStep] = useState<VerificationStep>(VerificationStep.CODE);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const currentEmail = searchParams.get('email');
@@ -111,7 +112,7 @@ const ValidateEmailPage= ({title}: Props) => {
                 return (
                     <SuccessMessage 
                         onClick={() => {
-                            navigate('/login');
+                            navigate(`/login${location.search}`);
                         }} 
                         title='Email Verified Successfully' 
                         description='Your email has been successfully verified. You can now log in to your account.' 

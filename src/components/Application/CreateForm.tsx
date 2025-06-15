@@ -172,6 +172,20 @@ const CreateForm: React.FC = () => {
                         text: q.text,
                         options: q.options
                     })));
+                    
+                    setTimeout(() => {
+                        const titleField = form.getFieldMeta('title');
+                        if (titleField) {
+                            form.validateField('title', 'change');
+                        }
+                        
+                        response.questions.forEach((question, questionIndex) => {
+                            form.validateField(`questions[${questionIndex}].text`, 'change');
+                            question.options.forEach((_, optionIndex) => {
+                                form.validateField(`questions[${questionIndex}].options[${optionIndex}]`, 'change');
+                            });
+                        });
+                    }, 0);
                 }}
             />
             <div className={style.formCreate__titleContainer}>
@@ -233,15 +247,18 @@ const CreateForm: React.FC = () => {
                                             name={`questions[${questionIndex}].text`}
                                             validators={validateQuestionText}
                                             children={(field) => (
-                                                <input
-                                                    id={field.name}
-                                                    name={field.name}
-                                                    className={`${style.form__input} ${style.formCreate__input} ${field.state.meta.errors.length ? style.form__inputError : ''}`}
-                                                    type="text"
-                                                    value={field.state.value}
-                                                    onChange={(e) => field.handleChange(e.target.value)}
-                                                    placeholder=" "
-                                                />
+                                                <>
+                                                    <input
+                                                        id={field.name}
+                                                        name={field.name}
+                                                        className={`${style.form__input} ${style.formCreate__input} ${field.state.meta.errors.length ? style.form__inputError : ''}`}
+                                                        type="text"
+                                                        value={field.state.value}
+                                                        onChange={(e) => field.handleChange(e.target.value)}
+                                                        placeholder=" "
+                                                    />
+                                                    <FieldInfo field={field} />
+                                                </>
                                             )}
                                         />
                                         <label className={style.form__label}>Enter question text</label>
@@ -256,15 +273,18 @@ const CreateForm: React.FC = () => {
                                                     name={`questions[${questionIndex}].options[${optionIndex}]`}
                                                     validators={validateOptionText}
                                                     children={(field) => (
-                                                        <input
-                                                            id={field.name}
-                                                            name={field.name}
-                                                            className={`${style.form__input} ${style.formCreate__input} ${style.formCreate__inputOption} ${field.state.meta.errors.length ? style.form__inputError : ''}`}
-                                                            type="text"
-                                                            value={field.state.value}
-                                                            onChange={(e) => field.handleChange(e.target.value)}
-                                                            placeholder=' '
-                                                        />
+                                                        <>
+                                                            <input
+                                                                id={field.name}
+                                                                name={field.name}
+                                                                className={`${style.form__input} ${style.formCreate__input} ${style.formCreate__inputOption} ${field.state.meta.errors.length ? style.form__inputError : ''}`}
+                                                                type="text"
+                                                                value={field.state.value}
+                                                                onChange={(e) => field.handleChange(e.target.value)}
+                                                                placeholder=' '
+                                                            />
+                                                            <FieldInfo field={field} />
+                                                        </>
                                                     )}
                                                 />
                                                 <label className={style.form__label}>{`Option ${optionIndex + 1}`}</label>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { register } from '../../api/authApi';
 import AuthContainer from './AuthContainer';
 import { FormField } from '../../components/Auth/AuthForm';
@@ -9,6 +9,7 @@ import { AuthForm } from '../../components/Auth/index';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [password, setPassword] = useState<string>('');
 
   const handleSubmit = async (values: any) => {
@@ -22,7 +23,9 @@ const RegisterPage: React.FC = () => {
     if(registerResponse.error) {
       return Array.isArray(registerResponse.message) ? registerResponse.message[0] : registerResponse.message;
     }
-    navigate(`/verify?email=${encodeURIComponent(email)}`);
+    const queryParams = new URLSearchParams(location.search);
+    queryParams.set('email', email);
+    navigate(`/verify?${queryParams.toString()}`);
     return null;
   };
 

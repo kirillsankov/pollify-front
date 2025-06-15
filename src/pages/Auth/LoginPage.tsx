@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
 import { login } from '../../store/authSlice';
@@ -18,14 +18,20 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
   const [, setForgotPassword] = React.useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (values: {email: string, password: string}) => {
     const { email, password } = values;
     try {
       (await dispatch(login({ email, password })).unwrap()) ;
       
+      const queryParams = new URLSearchParams(location.search);
+      const redirectTo = queryParams.get('redirect_to');
+
       if (callBackSuccess) {
         callBackSuccess();
+      } else if (redirectTo) {
+        navigate(redirectTo);
       } else {
         navigate('/app/stats');
       }
@@ -79,8 +85,8 @@ const LoginPage: React.FC<Props> = ({ callBackSuccess }) => {
 
   const footerContent = (
     <div className={style.form__registerLink}>
-      <div>Don't have an account? <Link className={style.link} to="/register">Register here</Link></div>
-      <div><Link className={style.link} to="/reset-password">Forgot password?</Link></div>
+      <div>Don't have an account? <Link className={style.link} to={`/register${location.search}`}>Register here</Link></div>
+      <div><Link className={style.link} to={`/reset-password${location.search}`}>Forgot password?</Link></div>
     </div>
   );
 
