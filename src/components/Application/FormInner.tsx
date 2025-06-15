@@ -24,7 +24,7 @@ const FormInner = () => {
             if (id && token) {
                 try {
                     const poll = await getForm(id);
-                    console.log(poll);
+                    // console.log(poll);
                     if (!('error' in poll)) {
                         setPoll(poll);
                         setQuestions(poll.questions);
