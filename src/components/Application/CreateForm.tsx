@@ -4,7 +4,7 @@ import { useForm } from '@tanstack/react-form';
 import { useAuth } from '../../hooks/useAuth';
 import { createPoll, getForm, updatePoll } from '../../api/formsAPI';
 import { ApiError, Poll } from '../../types/inerfaces';
-import { FieldInfo, ButtonWithIcon } from '../shared/index';
+import { FieldInfo, ButtonWithIcon, Loader } from '../shared/index';
 import GenerateForm from './GenerateForm';
 import style from '../../styles/Application/index.module.scss';
 
@@ -14,6 +14,7 @@ const CreateForm: React.FC = () => {
     const { token } = useAuth();
     const [poll, setPoll] = useState<Poll | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const popupState = useState<boolean>(false);
 
     const form = useForm({
@@ -77,6 +78,7 @@ const CreateForm: React.FC = () => {
     useEffect(() => {
         const fetchPoll = async () => {
             if (id && token) {
+                setIsLoading(true);
                 try {
                     const pollData = await getForm(id);
                     if (!('error' in pollData)) {
@@ -95,6 +97,8 @@ const CreateForm: React.FC = () => {
                     } else {
                         setError('An unknown error occurred');
                     }
+                } finally {
+                    setIsLoading(false);
                 }
             }
         };
@@ -155,6 +159,14 @@ const CreateForm: React.FC = () => {
         e.stopPropagation();
         form.handleSubmit();
     };
+
+    if (id && isLoading) {
+        return (
+            <div className={style.formCreate__block}>
+                <Loader />
+            </div>
+        );
+    }
 
     if ((error || !poll) && id) {
         return (
