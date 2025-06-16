@@ -1,8 +1,10 @@
 # Pollify - Educational Project for Creating and Managing Polls
 
+🌐 **Live Demo**: [https://polls-ai.ru/](https://polls-ai.ru/)
+
 ## Project Description
 
-Pollify is a web application for creating, managing, and analyzing polls. The project was developed for educational purposes to demonstrate modern web development technologies and best practices for building user interfaces.
+Pollify is a web application for creating, managing, and analyzing polls. The project was developed for educational purposes to demonstrate modern web development technologies and best practices for building user interfaces. The application features AI-powered poll generation, real-time analytics, and a modern responsive design.
 
 ## Technology Stack
 
@@ -26,9 +28,7 @@ Pollify is a web application for creating, managing, and analyzing polls. The pr
 ## Project Structure
 
 ```
-pollify-frontend/
-├── public/             # Static files
-├── src/                # Source code
+ src/
 │   ├── api/            # Modules for working with API
 │   ├── assets/         # Static resources (images, fonts)
 │   ├── components/     # Reusable components
@@ -40,13 +40,6 @@ pollify-frontend/
 │   ├── types/          # TypeScript types and interfaces
 │   ├── App.tsx         # Root component
 │   └── index.tsx       # Entry point
-├── .dockerignore       # Docker exclusions
-├── .gitignore          # Git exclusions
-├── Dockerfile          # Instructions for building Docker image
-├── docker-compose.yml  # Docker Compose configuration
-├── nginx.conf          # Nginx configuration for production
-├── package.json        # Dependencies and scripts
-└── tsconfig.json       # TypeScript configuration
 ```
 
 ## Installation and Launch
@@ -87,11 +80,13 @@ docker-compose up -d
 
 ## Functionality
 
-- Creating and editing polls with various question types
-- Publishing polls and collecting responses
-- Analyzing results using charts and diagrams
-- Managing users and their permissions
-- Exporting results in various formats
+- **AI-Powered Poll Generation** - Create professional polls using advanced AI suggestions
+- **Real-Time Analytics** - Watch responses come in live with interactive charts and graphs
+- **User Authentication** - Secure registration, login, and email verification system
+- **Responsive Design** - Optimized for desktop and mobile devices
+- **Poll Management** - Create, edit, delete, and share polls with ease
+- **Data Visualization** - Beautiful charts using Recharts library for result analysis
+- **Modern UI/UX** - Clean, intuitive interface with loading states and error handling
 
 ## Educational Project Goals
 
@@ -102,7 +97,10 @@ docker-compose up -d
 - Creating adaptive and accessible user interfaces
 - Learning methods for testing React components
 - Mastering containerization of frontend applications
+- Implementing user authentication and authorization
+- Working with external APIs and handling async operations
+- Creating reusable UI components and design systems
 
 ## Additional Information
 
-This project is part of a web development course and is not intended for use in a production environment without additional refinement and testing.
+This project demonstrates modern React development practices and is deployed as a live application. While originally created for educational purposes, it showcases production-ready features and best practices for web development.
